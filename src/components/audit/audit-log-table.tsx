@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils"
 
 type AuditRow = AuditEvent & Record<string, unknown>
 
-const PAGE_SIZE = 5
+const PAGE_SIZE_OPTIONS = [5, 10, 25] as const
 
 const outcomeStyles: Record<AuditEvent["outcome"], string> = {
   success: "bg-nest-green-light text-[#15663a]",
@@ -34,10 +34,8 @@ function AuditLogRows({
   filtered: AuditRow[]
   onSelect: (id: string) => void
 }) {
-  const { paginated, page, setPage, total } = usePagination(
-    filtered,
-    PAGE_SIZE
-  )
+  const [pageSize, setPageSize] = useState<number>(PAGE_SIZE_OPTIONS[0])
+  const { paginated, page, setPage, total } = usePagination(filtered, pageSize)
 
   if (filtered.length === 0) {
     return (
@@ -97,9 +95,11 @@ function AuditLogRows({
       </div>
       <TablePagination
         page={page}
-        pageSize={PAGE_SIZE}
+        pageSize={pageSize}
         total={total}
         onPageChange={setPage}
+        pageSizeOptions={[...PAGE_SIZE_OPTIONS]}
+        onPageSizeChange={setPageSize}
       />
     </>
   )

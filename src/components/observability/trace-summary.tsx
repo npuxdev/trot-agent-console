@@ -72,6 +72,32 @@ function MetadataField({
   )
 }
 
+function baselineDeltaPct(trace: Trace): number | null {
+  if (!trace.baselineMs || trace.baselineMs <= 0) return null
+  return Math.round(((trace.durationMs - trace.baselineMs) / trace.baselineMs) * 100)
+}
+
+function DurationField({ trace }: { trace: Trace }) {
+  const delta = baselineDeltaPct(trace)
+  return (
+    <div className="min-w-0">
+      <p className="text-xs text-muted-foreground">Duration</p>
+      <p className="truncate font-medium">{trace.duration}</p>
+      {delta !== null && delta !== 0 && (
+        <p
+          className={cn(
+            "text-[11px] font-medium tabular-nums",
+            delta > 0 ? "text-nest-orange" : "text-nest-green"
+          )}
+        >
+          {delta > 0 ? "+" : ""}
+          {delta}% from baseline
+        </p>
+      )}
+    </div>
+  )
+}
+
 export function TraceSummary({
   trace,
   layout = "banner",
@@ -101,7 +127,7 @@ export function TraceSummary({
           </div>
 
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <MetadataField label="Duration" value={trace.duration} />
+            <DurationField trace={trace} />
             {trace.degradedMs && trace.degradedPct ? (
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">Degraded</p>
@@ -112,6 +138,7 @@ export function TraceSummary({
             ) : (
               <MetadataField label="Recorded" value={trace.time} />
             )}
+            {trace.cost && <MetadataField label="Cost / exec" value={trace.cost} />}
           </div>
 
           <p className="text-xs leading-relaxed text-muted-foreground">
@@ -162,7 +189,7 @@ export function TraceSummary({
         </div>
 
         <div className="grid shrink-0 grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-4 lg:w-[min(100%,20rem)] lg:grid-cols-2">
-          <MetadataField label="Duration" value={trace.duration} />
+          <DurationField trace={trace} />
           {trace.degradedMs && trace.degradedPct ? (
             <div className="min-w-0">
               <p className="text-xs text-muted-foreground">Degraded</p>
@@ -173,8 +200,8 @@ export function TraceSummary({
           ) : (
             <MetadataField label="Recorded" value={trace.time} />
           )}
+          <MetadataField label="Cost / exec" value={trace.cost ?? "—"} />
           <MetadataField label="Agent" value={trace.agent} />
-          <MetadataField label="Environment" value={trace.environment} />
         </div>
       </CardContent>
     </Card>

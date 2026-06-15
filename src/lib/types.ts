@@ -2,6 +2,8 @@ export type Status = "success" | "warning" | "degraded"
 
 export type AgentStatus = "healthy" | "warning" | "degraded"
 
+export type AgentAutonomy = "Autonomous" | "Supervised" | "Manual"
+
 export type Agent = {
   id: string
   name: string
@@ -15,6 +17,12 @@ export type Agent = {
   mcpServerIds: string[]
   policyIds: string[]
   lastTraceId: string
+  owner: string
+  model: string
+  autonomy: AgentAutonomy
+  lastDeployed: string
+  costPerExecution: string
+  escalationPath: string
 }
 
 export type Trace = {
@@ -35,6 +43,8 @@ export type Trace = {
   degradedPct?: number
   hasSpanDetail: boolean
   defaultSpanId?: string
+  cost?: string
+  baselineMs?: number
 }
 
 export type SpanColor = "green" | "orange" | "red" | "none"
@@ -57,11 +67,14 @@ export type TraceSpan = {
   icon?: "warning" | "retry"
   barLabel?: string
   nestedBars?: NestedBar[]
+  baselineMs?: number
   details?: {
     spanId: string
     startTime: string
     endTime: string
     duration: string
+    cost?: string
+    baselineDelta?: string
     logs?: string[]
     tags?: string[]
   }
@@ -92,6 +105,12 @@ export type McpServer = {
   connectedAgentIds: string[]
   lastIncidentTraceId?: string
   description: string
+  authMethod: string
+  toolCount: number
+  scopes: string[]
+  schemaVersion: string
+  lastSync: string
+  costPerCall: string
 }
 
 export type PolicyCategory =

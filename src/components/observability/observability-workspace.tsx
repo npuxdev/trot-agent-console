@@ -21,14 +21,16 @@ export function ObservabilityWorkspace() {
   const traceId = searchParams.get("trace") ?? DEFAULT_TRACE_ID
   const trace = getTraceById(traceId) ?? getTraceById(DEFAULT_TRACE_ID)!
   const spans = getSpansForTrace(trace.id)
-  const [isWaterfallExpanded, setIsWaterfallExpanded] = useState(false)
+  const [isWaterfallExpanded, setIsWaterfallExpanded] = useState(
+    trace.status === "degraded"
+  )
 
   const defaultSpanId = trace.defaultSpanId ?? spans[0]?.id ?? null
   const [selectedSpanId, setSelectedSpanId] = useState<string | null>(null)
 
   useEffect(() => {
-    setIsWaterfallExpanded(false)
-  }, [trace.id])
+    setIsWaterfallExpanded(trace.status === "degraded")
+  }, [trace.id, trace.status])
 
   const effectiveSpanId = useMemo(() => {
     if (selectedSpanId && spans.some((s) => s.id === selectedSpanId)) {
@@ -82,8 +84,7 @@ export function ObservabilityWorkspace() {
         ) : (
           <Card className={overviewCardClass}>
             <CardContent className="flex min-h-[280px] items-center justify-center px-6 py-12 text-center text-sm text-muted-foreground">
-              Span detail not available for this trace. Select TRC-7419-A for the
-              full distributed trace waterfall.
+              Span detail not available for this trace.
             </CardContent>
           </Card>
         )}

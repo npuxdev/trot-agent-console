@@ -314,12 +314,12 @@ export function GovernanceViolationsTable() {
           <table className="w-full min-w-[800px] text-sm">
             <thead>
               <tr className={tableHeadClass}>
-                <th className="px-4 py-2.5 font-medium">Type</th>
-                <th className="px-4 py-2.5 font-medium">Policy</th>
-                <th className="px-4 py-2.5 font-medium">Agent</th>
-                <th className="px-4 py-2.5 font-medium">Message</th>
-                <th className="px-4 py-2.5 font-medium">Severity</th>
-                <th className="px-4 py-2.5 font-medium">Links</th>
+                <th className="px-4 py-2 font-medium">Type</th>
+                <th className="px-4 py-2 font-medium">Policy</th>
+                <th className="px-4 py-2 font-medium">Agent</th>
+                <th className="px-4 py-2 font-medium">Message</th>
+                <th className="px-4 py-2 font-medium">Severity</th>
+                <th className="px-4 py-2 font-medium">Links</th>
               </tr>
             </thead>
             <tbody>
@@ -328,30 +328,32 @@ export function GovernanceViolationsTable() {
                   key={v.id}
                   className="border-b border-border/40 last:border-0"
                 >
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-2">
                     <span className="text-xs font-medium">
                       {v.violationType
                         ? violationTypeLabels[v.violationType]
                         : "Policy breach"}
                     </span>
                   </td>
-                  <td className="px-4 py-3 font-medium">{v.policyName}</td>
-                  <td className="px-4 py-3">{v.agentName}</td>
-                  <td className="max-w-[240px] truncate px-4 py-3 text-muted-foreground">
+                  <td className="px-4 py-2 font-medium">{v.policyName}</td>
+                  <td className="px-4 py-2">{v.agentName}</td>
+                  <td className="max-w-[240px] truncate px-4 py-2 text-muted-foreground">
                     {v.message}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-2">
                     <StatusBadge
                       status={
-                        v.severity === "critical" || v.severity === "high"
-                          ? "degraded"
-                          : v.severity === "medium"
-                            ? "warning"
-                            : "success"
+                        v.severity === "critical"
+                          ? "critical"
+                          : v.severity === "high"
+                            ? "degraded"
+                            : v.severity === "medium"
+                              ? "warning"
+                              : "success"
                       }
                     />
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-2">
                     <div className="flex gap-3 text-xs">
                       <Link
                         href={`/audit?policy=${v.policyId}`}

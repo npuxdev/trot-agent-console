@@ -1,17 +1,19 @@
 import { cn } from "@/lib/utils"
 
-export type StatusType = "success" | "warning" | "degraded"
+export type StatusType = "success" | "warning" | "degraded" | "critical"
 
 const statusStyles: Record<StatusType, string> = {
   success: "bg-nest-green-light text-[#15663a]",
   warning: "bg-[#f7efd2] text-[#8a6c16]",
   degraded: "bg-nest-orange-light text-nest-orange",
+  critical: "bg-nest-red-light text-nest-red",
 }
 
 const statusLabels: Record<StatusType, string> = {
   success: "Success",
   warning: "Warning",
   degraded: "Degraded",
+  critical: "Critical",
 }
 
 export function StatusBadge({

@@ -123,13 +123,13 @@ export function GlobalSearch() {
   const showShortcutHint = query.length === 0 && !isOpen
 
   return (
-    <div ref={containerRef} className="relative w-[25.2rem]">
+    <div ref={containerRef} className="relative w-[21.42rem]">
       <Search className="absolute top-1/2 left-3 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         ref={inputRef}
         value={query}
-        placeholder="Quick search pages, sections, traces…"
-        aria-label="Quick search pages, sections, and traces"
+        placeholder="Search agents, traces, policies, tools…"
+        aria-label="Search agents, traces, policies, and tools"
         aria-expanded={isOpen}
         aria-controls="global-search-results"
         aria-autocomplete="list"

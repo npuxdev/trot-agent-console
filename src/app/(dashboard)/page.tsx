@@ -1,10 +1,6 @@
 import { AlertsTable } from "@/components/overview/alerts-table"
-import {
-  ApprovalQueuePreview,
-  OperationsPostureCards,
-  QuickActionsPanel,
-  WorkforceNarrative,
-} from "@/components/overview/operations-center"
+import { OperationsPostureCards } from "@/components/overview/operations-center"
+import { OverviewWorkforceSection } from "@/components/overview/overview-workforce-section"
 import { RecentTracesTable } from "@/components/overview/recent-traces-table"
 import { PageHeader } from "@/components/page-header"
 
@@ -15,15 +11,7 @@ export default function OverviewPage() {
 
       <OperationsPostureCards />
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <WorkforceNarrative />
-        </div>
-        <div className="space-y-4">
-          <QuickActionsPanel />
-          <ApprovalQueuePreview />
-        </div>
-      </div>
+      <OverviewWorkforceSection />
 
       <AlertsTable />
       <RecentTracesTable />

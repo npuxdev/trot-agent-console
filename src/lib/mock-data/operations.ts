@@ -33,7 +33,7 @@ export const workforceScenarios = [
     actor: "System (automated)",
     time: "Jun 14, 09:41",
     status: "active" as const,
-    link: "/governance",
+    link: "/approvals",
   },
   {
     id: "investigate",

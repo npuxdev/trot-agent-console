@@ -1,12 +1,12 @@
 import {
   Activity,
   Bot,
+  CheckSquare,
   History,
   LayoutDashboard,
   Network,
   ScrollText,
   Server,
-  Shield,
   Wallet,
   type LucideIcon,
 } from "lucide-react"
@@ -88,18 +88,6 @@ export const navSections: NavSection[] = [
     label: "Governance",
     items: [
       {
-        title: "Governance",
-        href: "/governance",
-        icon: Shield,
-        description: "Policies, approvals & trust",
-        badge: governanceSummary.pendingApprovals
-          ? {
-              label: `${governanceSummary.pendingApprovals} pending`,
-              tone: "warning",
-            }
-          : { label: String(policies.length), tone: "neutral" },
-      },
-      {
         title: "Policies",
         href: "/policies",
         icon: ScrollText,
@@ -109,7 +97,19 @@ export const navSections: NavSection[] = [
           : { label: String(policies.length), tone: "neutral" },
       },
       {
-        title: "Audit",
+        title: "Approvals",
+        href: "/approvals",
+        icon: CheckSquare,
+        description: "Review queue & simulation",
+        badge: governanceSummary.pendingApprovals
+          ? {
+              label: `${governanceSummary.pendingApprovals} pending`,
+              tone: "warning",
+            }
+          : undefined,
+      },
+      {
+        title: "Audit Log",
         href: "/audit",
         icon: History,
         description: "Decision history",

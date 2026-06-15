@@ -25,10 +25,16 @@ export function AppSidebar() {
         </Link>
       </div>
 
-      <nav className="flex flex-1 flex-col gap-5 overflow-y-auto px-3 pb-2">
-        {navSections.map((section) => (
-          <div key={section.label} className="space-y-1">
-            <p className="px-3 pb-1 text-[10px] font-semibold tracking-[0.12em] text-muted-foreground/70 uppercase">
+      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 pb-2">
+        {navSections.map((section, sectionIndex) => (
+          <div
+            key={section.label}
+            className={cn(
+              "space-y-0.5 py-2",
+              sectionIndex > 0 && "border-t border-sidebar-border/70"
+            )}
+          >
+            <p className="px-3 pt-1 pb-1.5 text-[10px] font-semibold tracking-[0.14em] text-muted-foreground/80 uppercase">
               {section.label}
             </p>
             {section.items.map((item) => {
@@ -42,21 +48,22 @@ export function AppSidebar() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  aria-current={isActive ? "page" : undefined}
                   className={cn(
                     "group relative flex items-center gap-3 px-3 py-2 transition-colors",
                     isActive
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                      ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-[inset_0_0_0_1px_var(--color-sidebar-border)]"
                       : "text-sidebar-foreground hover:bg-sidebar-accent/40"
                   )}
                 >
                   {isActive && (
-                    <span className="absolute top-1.5 bottom-1.5 left-0 w-0.5 bg-nest-green" />
+                    <span className="absolute top-1 bottom-1 left-0 w-[3px] bg-nest-green" />
                   )}
                   <span
                     className={cn(
                       "flex size-8 shrink-0 items-center justify-center border transition-colors",
                       isActive
-                        ? "border-nest-green/30 bg-nest-green/10 text-nest-green"
+                        ? "border-nest-green/40 bg-nest-green/15 text-nest-green"
                         : "border-transparent bg-muted/60 text-muted-foreground group-hover:text-foreground"
                     )}
                   >
@@ -66,8 +73,10 @@ export function AppSidebar() {
                     <span className="flex items-center justify-between gap-2">
                       <span
                         className={cn(
-                          "truncate text-sm font-medium",
-                          isActive ? "text-sidebar-accent-foreground" : ""
+                          "truncate text-sm",
+                          isActive
+                            ? "font-semibold text-sidebar-accent-foreground"
+                            : "font-medium"
                         )}
                       >
                         {item.title}

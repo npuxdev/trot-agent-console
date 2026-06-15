@@ -148,6 +148,13 @@ function SpanDetailsContent({ span }: { span: TraceSpan | null }) {
         value={details.duration}
         highlight={span.highlighted}
       />
+      {details.baselineDelta && (
+        <div>
+          <p className="text-xs text-muted-foreground">Baseline</p>
+          <p className="font-medium text-nest-orange">{details.baselineDelta}</p>
+        </div>
+      )}
+      {details.cost && <DetailField label="Cost" value={details.cost} />}
 
       {details.logs && details.logs.length > 0 && (
         <div>

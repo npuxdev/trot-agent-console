@@ -1,8 +1,10 @@
 "use client"
 
 import Link from "next/link"
-import { Activity, ArrowUpRight, ShieldCheck } from "lucide-react"
+import { Activity, ArrowUpRight, ShieldCheck, Siren } from "lucide-react"
 
+import { AutonomyPill } from "@/components/agents/autonomy-pill"
+import { EscalationPath } from "@/components/agents/escalation-path"
 import { Sheet, SheetSection, SheetStat } from "@/components/ui/sheet"
 import { StatusBadge, type StatusType } from "@/components/overview/status-badge"
 import { getAgentById } from "@/lib/mock-data/agents"
@@ -54,8 +56,22 @@ export function AgentDetailSheet({
     >
       {agent && (
         <div className="space-y-6">
+          <SheetSection title="Profile">
+            <div className="grid grid-cols-2 gap-2">
+              <SheetStat label="Owner" value={agent.owner} />
+              <SheetStat label="Model" value={agent.model} />
+              <div className="border border-border/70 bg-background/60 px-3 py-2">
+                <p className="text-xs text-muted-foreground">Autonomy</p>
+                <div className="mt-1">
+                  <AutonomyPill autonomy={agent.autonomy} />
+                </div>
+              </div>
+              <SheetStat label="Last deployed" value={agent.lastDeployed} />
+            </div>
+          </SheetSection>
+
           <SheetSection title="Performance">
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               <SheetStat label="Volume" value={agent.volume} />
               <SheetStat
                 label="Avg latency"
@@ -67,10 +83,18 @@ export function AgentDetailSheet({
                 value={agent.errorRate}
                 tone={agent.status === "healthy" ? "success" : "warning"}
               />
+              <SheetStat label="Cost / exec" value={agent.costPerExecution} />
             </div>
           </SheetSection>
 
-          <SheetSection title={`Connected MCP servers (${agent.mcpServerIds.length})`}>
+          <SheetSection title="Escalation path">
+            <p className="flex items-center gap-2 border border-border/70 bg-background/60 px-3 py-2.5 text-sm">
+              <Siren className="size-4 shrink-0 text-nest-orange" />
+              <EscalationPath path={agent.escalationPath} />
+            </p>
+          </SheetSection>
+
+          <SheetSection title={`Approved tools (${agent.mcpServerIds.length})`}>
             <div className="space-y-1.5">
               {agent.mcpServerIds.map((id) => {
                 const server = getMcpServerById(id)

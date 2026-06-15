@@ -8,29 +8,30 @@ import {
   PolicySimulationPanel,
 } from "@/components/governance/governance-workspace"
 
-export default function GovernancePage() {
+export default function ApprovalsPage() {
   return (
     <div className="space-y-5">
-      <PageHeader title="Governance" />
+      <PageHeader title="Approvals" />
 
       <p className="-mt-2 max-w-3xl text-sm text-muted-foreground">
-        Control how autonomous agents access tools, consume models, handle
-        sensitive data, and escalate decisions. Every policy change is simulated,
-        audited, and traceable.
+        Clear the human-review queue and preview the blast radius of policy
+        changes before they reach production. Every approval and simulation is
+        audited and traceable.
       </p>
 
       <GovernanceSummaryCards />
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <PolicyCategoryGrid />
+      <div className="grid items-start gap-4 lg:grid-cols-2">
         <PendingApprovalsPanel />
+        <PolicySimulationPanel />
       </div>
-
-      <PolicySimulationPanel />
 
       <GovernanceViolationsTable />
 
-      <ActivePoliciesPanel />
+      <div className="grid items-start gap-4 lg:grid-cols-2">
+        <PolicyCategoryGrid />
+        <ActivePoliciesPanel />
+      </div>
     </div>
   )
 }

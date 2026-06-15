@@ -11,6 +11,51 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { overviewCardClass, tableHeadClass } from "@/lib/card-styles"
 import { policies } from "@/lib/mock-data/policies"
 import type { Policy } from "@/lib/types"
+import { cn } from "@/lib/utils"
+
+type Severity = "critical" | "high" | "medium" | "low"
+
+const severityRank: Record<Severity, number> = {
+  critical: 4,
+  high: 3,
+  medium: 2,
+  low: 1,
+}
+
+const severityStyles: Record<Severity, string> = {
+  critical: "border-nest-red/30 bg-nest-red-light text-nest-red",
+  high: "border-nest-orange/30 bg-nest-orange-light text-nest-orange",
+  medium: "border-[#e0cf8e] bg-[#f7efd2] text-[#8a6c16]",
+  low: "border-border bg-muted/60 text-muted-foreground",
+}
+
+function getPolicySeverity(policy: Policy): Severity | null {
+  let max: Severity | null = null
+  for (const violation of policy.violations) {
+    const severity = violation.severity
+    if (!severity) continue
+    if (!max || severityRank[severity] > severityRank[max]) {
+      max = severity
+    }
+  }
+  return max
+}
+
+function SeverityPill({ severity }: { severity: Severity | null }) {
+  if (!severity) {
+    return <span className="text-xs text-muted-foreground">—</span>
+  }
+  return (
+    <span
+      className={cn(
+        "inline-flex h-5 items-center border px-2 text-xs font-medium capitalize",
+        severityStyles[severity]
+      )}
+    >
+      {severity}
+    </span>
+  )
+}
 
 type PolicyRow = Policy & Record<string, unknown>
 
@@ -40,15 +85,17 @@ export function PoliciesTable() {
           <Card className={overviewCardClass}>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[720px] text-sm">
+                <table className="w-full min-w-[920px] text-sm">
                   <thead>
                     <tr className="border-b border-border/60 bg-muted/50 text-left text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                      <th className="px-4 py-2.5 font-medium">Policy</th>
-                      <th className="px-4 py-2.5 font-medium">Type</th>
-                      <th className="px-4 py-2.5 font-medium">Threshold</th>
-                      <th className="px-4 py-2.5 font-medium">Status</th>
-                      <th className="px-4 py-2.5 font-medium">Agents</th>
-                      <th className="w-8 px-4 py-2.5" />
+                      <th className="px-4 py-2 font-medium">Policy</th>
+                      <th className="px-4 py-2 font-medium">Type</th>
+                      <th className="px-4 py-2 font-medium">Severity</th>
+                      <th className="px-4 py-2 font-medium">Status</th>
+                      <th className="px-4 py-2 font-medium">Owner</th>
+                      <th className="px-4 py-2 font-medium">Last modified</th>
+                      <th className="px-4 py-2 font-medium">Agents</th>
+                      <th className="w-8 px-4 py-2" />
                     </tr>
                   </thead>
                   <tbody>
@@ -58,23 +105,29 @@ export function PoliciesTable() {
                         onClick={() => setSelectedId(policy.id)}
                         className="group cursor-pointer border-b border-border/40 transition-colors last:border-0 hover:bg-muted/40"
                       >
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-2">
                           <div className="font-medium">{policy.name}</div>
                           <div className="text-xs text-muted-foreground">
                             {policy.scope}
                           </div>
                         </td>
-                        <td className="px-4 py-3">{policy.type}</td>
-                        <td className="px-4 py-3 text-muted-foreground">
-                          {policy.threshold}
+                        <td className="px-4 py-2">{policy.type}</td>
+                        <td className="px-4 py-2">
+                          <SeverityPill severity={getPolicySeverity(policy)} />
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-2">
                           <StatusBadge status={policy.status} />
                         </td>
-                        <td className="px-4 py-3 tabular-nums text-muted-foreground">
+                        <td className="px-4 py-2 text-muted-foreground">
+                          {policy.owner}
+                        </td>
+                        <td className="px-4 py-2 text-muted-foreground">
+                          {policy.lastModified}
+                        </td>
+                        <td className="px-4 py-2 tabular-nums text-muted-foreground">
                           {policy.boundAgentIds.length}
                         </td>
-                        <td className="px-4 py-3 text-right">
+                        <td className="px-4 py-2 text-right">
                           <ChevronRight className="ml-auto size-4 text-muted-foreground/50 transition-colors group-hover:text-foreground" />
                         </td>
                       </tr>

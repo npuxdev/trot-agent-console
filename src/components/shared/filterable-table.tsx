@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react"
 
-import { Search } from "lucide-react"
+import { ChevronDown, Search } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
@@ -71,25 +71,30 @@ export function FilterableTable<T extends Record<string, unknown>>({
           />
         </div>
         {filters.map((filter) => (
-          <select
-            key={String(filter.key)}
-            value={filterValues[String(filter.key)] ?? "all"}
-            onChange={(e) =>
-              setFilterValues((prev) => ({
-                ...prev,
-                [String(filter.key)]: e.target.value,
-              }))
-            }
-            className="h-9 rounded-none border border-border bg-white px-3 text-sm text-foreground"
-            aria-label={filter.label}
-          >
-            <option value="all">All {filter.label}</option>
-            {filter.options.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+          <div key={String(filter.key)} className="relative">
+            <select
+              value={filterValues[String(filter.key)] ?? "all"}
+              onChange={(e) =>
+                setFilterValues((prev) => ({
+                  ...prev,
+                  [String(filter.key)]: e.target.value,
+                }))
+              }
+              className="h-9 appearance-none rounded-none border border-border bg-white pl-3 pr-8 text-sm text-foreground"
+              aria-label={filter.label}
+            >
+              <option value="all">All {filter.label}</option>
+              {filter.options.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              aria-hidden="true"
+              className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground"
+            />
+          </div>
         ))}
       </div>
       {children(filtered)}

@@ -3,6 +3,7 @@
 import { Loader2 } from "lucide-react"
 
 import { useDateRange } from "@/components/shared/date-range-context"
+import { GlobalStatusIndicator } from "@/components/shared/global-status-indicator"
 import { cn } from "@/lib/utils"
 
 type DashboardMainProps = {
@@ -13,10 +14,11 @@ export function DashboardMain({ children }: DashboardMainProps) {
   const { isLoading } = useDateRange()
 
   return (
-    <main className="relative flex-1 overflow-y-auto px-5 py-4">
+    <main className="relative flex flex-1 flex-col overflow-y-auto">
+      <GlobalStatusIndicator />
       <div
         className={cn(
-          "transition-opacity duration-200",
+          "flex-1 px-5 py-4 transition-opacity duration-200",
           isLoading && "pointer-events-none opacity-40"
         )}
       >

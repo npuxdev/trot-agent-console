@@ -24,7 +24,7 @@ export function McpServerDetailSheet({
     <Sheet
       open={Boolean(server)}
       onOpenChange={onOpenChange}
-      eyebrow="MCP server"
+      eyebrow={server ? `MCP server · ${server.version}` : "MCP server"}
       title={server?.name ?? "Server"}
       description={server?.description}
       headerExtra={server && <StatusBadge status={server.status} />}
@@ -58,6 +58,29 @@ export function McpServerDetailSheet({
                 p95 latency exceeds configured timeout threshold.
               </p>
             )}
+          </SheetSection>
+
+          <SheetSection title="Configuration">
+            <div className="grid grid-cols-2 gap-2">
+              <SheetStat label="Auth method" value={server.authMethod} />
+              <SheetStat label="Tools exposed" value={String(server.toolCount)} />
+              <SheetStat label="Schema version" value={server.schemaVersion} />
+              <SheetStat label="Last synced" value={server.lastSync} />
+              <SheetStat label="Cost / call" value={server.costPerCall} />
+            </div>
+          </SheetSection>
+
+          <SheetSection title={`Permission scopes (${server.scopes.length})`}>
+            <div className="flex flex-wrap gap-1.5">
+              {server.scopes.map((scope) => (
+                <span
+                  key={scope}
+                  className="border border-border/70 bg-background/60 px-2 py-1 font-mono text-[11px] text-muted-foreground"
+                >
+                  {scope}
+                </span>
+              ))}
+            </div>
           </SheetSection>
 
           <SheetSection title="Endpoint">

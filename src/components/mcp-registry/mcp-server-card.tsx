@@ -37,6 +37,17 @@ export function McpServersGrid() {
                 </CardTitle>
                 <StatusBadge status={server.status} />
               </div>
+              <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
+                <span className="border border-border/70 bg-muted/50 px-1.5 py-0.5 font-mono font-medium text-muted-foreground">
+                  MCP {server.version}
+                </span>
+                <span className="border border-border/70 bg-muted/50 px-1.5 py-0.5 font-medium text-muted-foreground">
+                  {server.toolCount} tools
+                </span>
+                <span className="border border-border/70 bg-muted/50 px-1.5 py-0.5 font-medium text-muted-foreground">
+                  {server.authMethod}
+                </span>
+              </div>
               <p className="line-clamp-2 text-xs text-muted-foreground">
                 {server.description}
               </p>
@@ -55,10 +66,8 @@ export function McpServersGrid() {
                   </p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground">Timeout</p>
-                  <p className="font-medium tabular-nums">
-                    {server.timeoutThreshold}
-                  </p>
+                  <p className="text-muted-foreground">Cost / call</p>
+                  <p className="font-medium tabular-nums">{server.costPerCall}</p>
                 </div>
                 <div>
                   <p className="text-muted-foreground">Agents</p>
@@ -67,12 +76,20 @@ export function McpServersGrid() {
                   </p>
                 </div>
               </div>
-              {server.lastIncidentTraceId && (
-                <p className="inline-flex items-center gap-1.5 text-xs font-medium text-nest-orange">
-                  <AlertTriangle className="size-3" />
-                  Recent incident
-                </p>
-              )}
+              <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                <span>
+                  Last synced{" "}
+                  <span className="font-medium text-foreground">
+                    {server.lastSync}
+                  </span>
+                </span>
+                {server.lastIncidentTraceId && (
+                  <span className="inline-flex items-center gap-1.5 font-medium text-nest-orange">
+                    <AlertTriangle className="size-3" />
+                    Recent incident
+                  </span>
+                )}
+              </div>
             </CardContent>
           </Card>
         ))}
@@ -116,11 +133,11 @@ export function McpAgentsTable() {
             <table className="w-full min-w-[600px] text-sm">
               <thead>
                 <tr className={tableHeadClass}>
-                  <th className="px-4 py-2.5 font-medium">MCP Server</th>
-                  <th className="px-4 py-2.5 font-medium">Server Status</th>
-                  <th className="px-4 py-2.5 font-medium">Agent</th>
-                  <th className="px-4 py-2.5 font-medium">Team</th>
-                  <th className="w-8 px-4 py-2.5" />
+                  <th className="px-4 py-2 font-medium">MCP Server</th>
+                  <th className="px-4 py-2 font-medium">Server Status</th>
+                  <th className="px-4 py-2 font-medium">Agent</th>
+                  <th className="px-4 py-2 font-medium">Team</th>
+                  <th className="w-8 px-4 py-2" />
                 </tr>
               </thead>
               <tbody>
@@ -130,15 +147,15 @@ export function McpAgentsTable() {
                     onClick={() => setSelectedId(row.agentId)}
                     className="group cursor-pointer border-b border-border/40 transition-colors last:border-0 hover:bg-muted/50"
                   >
-                    <td className="px-4 py-3 font-medium">{row.serverName}</td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-2 font-medium">{row.serverName}</td>
+                    <td className="px-4 py-2">
                       <StatusBadge status={row.serverStatus} />
                     </td>
-                    <td className="px-4 py-3">{row.agentName}</td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="px-4 py-2">{row.agentName}</td>
+                    <td className="px-4 py-2 text-muted-foreground">
                       {row.agentTeam}
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-2 text-right">
                       <ChevronRight className="ml-auto size-4 text-muted-foreground/50 transition-colors group-hover:text-foreground" />
                     </td>
                   </tr>

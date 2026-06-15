@@ -2,7 +2,6 @@ import Link from "next/link"
 import {
   ArrowUpRight,
   Bot,
-  CheckCircle2,
   Clock,
   Shield,
   Wallet,
@@ -13,7 +12,6 @@ import { overviewCardClass } from "@/lib/card-styles"
 import {
   operationsSummary,
   pendingApprovals,
-  workforceScenarios,
 } from "@/lib/mock-data/operations"
 import { allViolations } from "@/lib/mock-data/policies"
 import { cn } from "@/lib/utils"
@@ -126,85 +124,6 @@ export function OperationsPostureCards() {
   )
 }
 
-const phaseColors: Record<string, string> = {
-  Onboard: "bg-[#eff6ff] text-[#1e40af] border-[#93c5fd]",
-  Govern: "bg-nest-orange-light text-[#92600c] border-nest-orange/30",
-  Investigate: "bg-nest-red-light text-nest-red border-nest-red/30",
-  Audit: "bg-[#f5f3ff] text-[#7c3aed] border-[#c4b5fd]",
-  Optimize: "bg-nest-green-light text-[#166534] border-nest-green/30",
-}
-
-export function WorkforceNarrative() {
-  return (
-    <Card className={overviewCardClass}>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold">
-          Operating an AI Workforce
-        </CardTitle>
-        <p className="text-xs text-muted-foreground">
-          How teams onboard agents, govern behavior, investigate failures, and
-          continuously improve — illustrated through today&apos;s incident on
-          trace TRC-7419-A
-        </p>
-      </CardHeader>
-      <CardContent className="space-y-0 p-0">
-        {workforceScenarios.map((scenario, i) => (
-          <div
-            key={scenario.id}
-            className={cn(
-              "flex gap-4 border-b border-border/40 px-4 py-4 last:border-0",
-              scenario.status === "active" && "bg-nest-red-light/20"
-            )}
-          >
-            <div className="flex flex-col items-center">
-              <span
-                className={cn(
-                  "border px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase",
-                  phaseColors[scenario.phase]
-                )}
-              >
-                {scenario.phase}
-              </span>
-              {i < workforceScenarios.length - 1 && (
-                <span className="mt-2 h-full w-px bg-border/60" />
-              )}
-            </div>
-            <div className="min-w-0 flex-1 space-y-1">
-              <div className="flex items-start justify-between gap-2">
-                <p className="text-sm font-medium">{scenario.title}</p>
-                <span className="shrink-0 text-[10px] text-muted-foreground">
-                  {scenario.time}
-                </span>
-              </div>
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                {scenario.description}
-              </p>
-              <div className="flex items-center justify-between pt-1">
-                <span className="text-[10px] text-muted-foreground">
-                  {scenario.actor}
-                </span>
-                <Link
-                  href={scenario.link}
-                  className="inline-flex items-center gap-1 text-[10px] font-medium text-nest-green hover:underline"
-                >
-                  View
-                  <ArrowUpRight className="size-3" />
-                </Link>
-              </div>
-            </div>
-            {scenario.status === "completed" && (
-              <CheckCircle2 className="size-4 shrink-0 text-nest-green" />
-            )}
-            {scenario.status === "pending" && (
-              <Clock className="size-4 shrink-0 text-nest-orange" />
-            )}
-          </div>
-        ))}
-      </CardContent>
-    </Card>
-  )
-}
-
 export function QuickActionsPanel() {
   const actions = [
     {
@@ -213,9 +132,9 @@ export function QuickActionsPanel() {
       href: "/topology",
     },
     {
-      label: "Review governance",
+      label: "Clear approval queue",
       description: "7 pending approvals, 8 violations",
-      href: "/governance",
+      href: "/approvals",
     },
     {
       label: "Investigate TRC-7419-A",
@@ -266,7 +185,7 @@ export function ApprovalQueuePreview() {
             Approval Queue
           </CardTitle>
           <Link
-            href="/governance"
+            href="/approvals"
             className="text-xs font-medium text-nest-green hover:underline"
           >
             View all →

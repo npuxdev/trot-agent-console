@@ -6,9 +6,9 @@ export function TrotLogo({ className }: { className?: string }) {
       <img
         src="/trot-logo.png"
         alt="TROT"
-        className="h-7 w-auto"
-        width={88}
-        height={28}
+        className="h-[1.925rem] w-auto"
+        width={97}
+        height={31}
       />
     </div>
   )
