@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-import { NestLogo } from "@/components/nest-logo"
+import { TrotLogo } from "@/components/trot-logo"
 import { SidebarAccount } from "@/components/sidebar-account"
 import { cn } from "@/lib/utils"
 import { navSections, type NavBadgeTone } from "@/lib/navigation"
@@ -21,7 +21,7 @@ export function AppSidebar() {
     <aside className="flex h-screen w-[256px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
       <div className="px-5 pt-5 pb-4">
         <Link href="/" className="inline-flex">
-          <NestLogo />
+          <TrotLogo />
         </Link>
       </div>
 

@@ -1,9 +1,9 @@
 import type { CostByAgent, CostByModel, HighCostTrace } from "@/lib/types"
 
 export const costSummary = {
-  totalSpend: 12400,
-  totalTokens: "48.2M",
-  avgCostPerTrace: "$0.042",
+  totalSpend: 12680,
+  totalTokens: "54.6M",
+  avgCostPerTrace: "$0.038",
   period: "Last 24h",
 }
 
@@ -16,9 +16,11 @@ export const costByAgent: CostByAgent[] = [
 ]
 
 export const costByModel: CostByModel[] = [
-  { model: "gpt-4.1", spend: 7800, tokens: "28.4M", requests: "412K" },
-  { model: "gpt-4.1-mini", spend: 3200, tokens: "15.8M", requests: "1.2M" },
+  { model: "gpt-4.1", spend: 6200, tokens: "24.2M", requests: "380K" },
+  { model: "gpt-4.1-mini", spend: 2600, tokens: "12.4M", requests: "980K" },
+  { model: "deepseek-v4", spend: 2100, tokens: "8.4M", requests: "520K" },
   { model: "text-embedding-3", spend: 1400, tokens: "4.0M", requests: "890K" },
+  { model: "gemma-3-4b", spend: 380, tokens: "5.6M", requests: "2.4M" },
 ]
 
 export const highCostTraces: HighCostTrace[] = [

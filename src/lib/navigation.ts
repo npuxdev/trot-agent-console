@@ -3,15 +3,21 @@ import {
   Bot,
   History,
   LayoutDashboard,
+  Network,
+  ScrollText,
   Server,
-  ShieldCheck,
+  Shield,
   Wallet,
   type LucideIcon,
 } from "lucide-react"
 
 import { agents } from "@/lib/mock-data/agents"
 import { mcpServers } from "@/lib/mock-data/mcp-servers"
-import { allViolations, policies } from "@/lib/mock-data/policies"
+import {
+  allViolations,
+  governanceSummary,
+  policies,
+} from "@/lib/mock-data/policies"
 import { traces } from "@/lib/mock-data/traces"
 import { costSummary } from "@/lib/mock-data/costs"
 import { auditSummary } from "@/lib/mock-data/audit"
@@ -40,26 +46,38 @@ const degradedServers = mcpServers.filter((s) => s.status === "degraded").length
 
 export const navSections: NavSection[] = [
   {
-    label: "Platform",
+    label: "Operations",
     items: [
       {
-        title: "Overview",
+        title: "Operations Center",
         href: "/",
         icon: LayoutDashboard,
-        description: "System health & alerts",
+        description: "Workforce posture & narrative",
       },
+      {
+        title: "Agent Topology",
+        href: "/topology",
+        icon: Network,
+        description: "Ecosystem map & blast radius",
+        badge: { label: "Live", tone: "neutral" },
+      },
+    ],
+  },
+  {
+    label: "Platform",
+    items: [
       {
         title: "Agents",
         href: "/agents",
         icon: Bot,
-        description: "Fleet & performance",
+        description: "Fleet & permissions",
         badge: { label: String(agents.length), tone: "neutral" },
       },
       {
         title: "MCP Registry",
         href: "/mcp-registry",
         icon: Server,
-        description: "Connected tool servers",
+        description: "Tool servers & access",
         badge: degradedServers
           ? { label: `${degradedServers} down`, tone: "danger" }
           : { label: String(mcpServers.length), tone: "neutral" },
@@ -70,10 +88,22 @@ export const navSections: NavSection[] = [
     label: "Governance",
     items: [
       {
+        title: "Governance",
+        href: "/governance",
+        icon: Shield,
+        description: "Policies, approvals & trust",
+        badge: governanceSummary.pendingApprovals
+          ? {
+              label: `${governanceSummary.pendingApprovals} pending`,
+              tone: "warning",
+            }
+          : { label: String(policies.length), tone: "neutral" },
+      },
+      {
         title: "Policies",
         href: "/policies",
-        icon: ShieldCheck,
-        description: "Guardrails & SLOs",
+        icon: ScrollText,
+        description: "Rules & thresholds",
         badge: allViolations.length
           ? { label: String(allViolations.length), tone: "warning" }
           : { label: String(policies.length), tone: "neutral" },
@@ -82,7 +112,7 @@ export const navSections: NavSection[] = [
         title: "Audit",
         href: "/audit",
         icon: History,
-        description: "Event history",
+        description: "Decision history",
         badge: { label: String(auditSummary.eventsToday), tone: "neutral" },
       },
     ],
@@ -101,7 +131,7 @@ export const navSections: NavSection[] = [
         title: "Costs",
         href: "/costs",
         icon: Wallet,
-        description: "Spend & tokens",
+        description: "Spend & token budgets",
         badge: {
           label: `$${(costSummary.totalSpend / 1000).toFixed(1)}k`,
           tone: "neutral",

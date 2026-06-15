@@ -1,8 +1,9 @@
 "use client"
 
-import { AlertTriangle, RotateCcw } from "lucide-react"
+import { AlertTriangle, Maximize2, Minimize2, RotateCcw } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { overviewCardClass } from "@/lib/card-styles"
 import type { TraceSpan } from "@/lib/types"
@@ -13,6 +14,9 @@ type TraceWaterfallProps = {
   totalMs: number
   selectedSpanId: string | null
   onSelectSpan: (spanId: string) => void
+  showDetailsPanel?: boolean
+  expanded?: boolean
+  onExpandedChange?: (expanded: boolean) => void
 }
 
 function pct(ms: number, totalMs: number) {
@@ -123,16 +127,11 @@ function TimelineRow({
   )
 }
 
-function SpanDetailsPanel({ span }: { span: TraceSpan | null }) {
+function SpanDetailsContent({ span }: { span: TraceSpan | null }) {
   if (!span?.details) {
     return (
-      <div className="flex w-[240px] shrink-0 flex-col self-stretch border-l border-border/60 bg-[#fafaf8]">
-        <div className="border-b border-border/60 px-3 py-2">
-          <h3 className="text-sm font-semibold">Span Details</h3>
-        </div>
-        <div className="flex flex-1 items-center justify-center px-3 py-8 text-center text-xs text-muted-foreground">
-          Select a span to view details
-        </div>
+      <div className="flex flex-1 items-center justify-center px-3 py-8 text-center text-xs text-muted-foreground">
+        Select a span to view details
       </div>
     )
   }
@@ -140,59 +139,92 @@ function SpanDetailsPanel({ span }: { span: TraceSpan | null }) {
   const { details } = span
 
   return (
-    <div className="flex w-[240px] shrink-0 flex-col self-stretch border-l border-border/60 bg-[#fafaf8]">
-      <div className="border-b border-border/60 px-3 py-2">
-        <h3 className="text-sm font-semibold">Span Details</h3>
-        <p className="text-xs text-muted-foreground">{span.label}</p>
-      </div>
+    <div className="space-y-3 px-3 py-3 text-sm">
+      <DetailField label="Span ID" value={details.spanId} />
+      <DetailField label="Start Time" value={details.startTime} />
+      <DetailField label="End Time" value={details.endTime} />
+      <DetailField
+        label="Duration"
+        value={details.duration}
+        highlight={span.highlighted}
+      />
 
-      <div className="space-y-3 px-3 py-3 text-sm">
-        <DetailField label="Span ID" value={details.spanId} />
-        <DetailField label="Start Time" value={details.startTime} />
-        <DetailField label="End Time" value={details.endTime} />
-        <DetailField
-          label="Duration"
-          value={details.duration}
-          highlight={span.highlighted}
-        />
+      {details.logs && details.logs.length > 0 && (
+        <div>
+          <p className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+            Logs
+          </p>
+          {details.logs.map((log) => (
+            <Badge
+              key={log}
+              variant="outline"
+              className="rounded-full border-[#e8dcc8] bg-[#f5f0e6] px-3 py-1 text-xs font-normal text-[#8b6914]"
+            >
+              {log}
+            </Badge>
+          ))}
+        </div>
+      )}
 
-        {details.logs && details.logs.length > 0 && (
-          <div>
-            <p className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              Logs
-            </p>
-            {details.logs.map((log) => (
+      {details.tags && details.tags.length > 0 && (
+        <div>
+          <p className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+            Tags
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {details.tags.map((tag) => (
               <Badge
-                key={log}
+                key={tag}
                 variant="outline"
-                className="rounded-full border-[#e8dcc8] bg-[#f5f0e6] px-3 py-1 text-xs font-normal text-[#8b6914]"
+                className="rounded-full font-mono text-xs font-normal"
               >
-                {log}
+                {tag}
               </Badge>
             ))}
           </div>
-        )}
-
-        {details.tags && details.tags.length > 0 && (
-          <div>
-            <p className="mb-2 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              Tags
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {details.tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="outline"
-                  className="rounded-full font-mono text-xs font-normal"
-                >
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
+  )
+}
+
+export function SpanDetailsPanel({
+  span,
+  embedded = false,
+  className,
+}: {
+  span: TraceSpan | null
+  embedded?: boolean
+  className?: string
+}) {
+  const header = (
+    <div className="border-b border-border/60 px-3 py-2">
+      <h3 className="text-sm font-semibold">Span Details</h3>
+      {span?.label && (
+        <p className="truncate text-xs text-muted-foreground">{span.label}</p>
+      )}
+    </div>
+  )
+
+  if (embedded) {
+    return (
+      <div
+        className={cn(
+          "flex w-[240px] shrink-0 flex-col self-stretch border-l border-border/60 bg-[#fafaf8]",
+          className
+        )}
+      >
+        {header}
+        <SpanDetailsContent span={span} />
+      </div>
+    )
+  }
+
+  return (
+    <Card className={cn(overviewCardClass, "flex flex-col overflow-hidden", className)}>
+      {header}
+      <SpanDetailsContent span={span} />
+    </Card>
   )
 }
 
@@ -220,6 +252,9 @@ export function TraceWaterfall({
   totalMs,
   selectedSpanId,
   onSelectSpan,
+  showDetailsPanel = true,
+  expanded = false,
+  onExpandedChange,
 }: TraceWaterfallProps) {
   const ticks = [0, 1000, 2000, 3000].filter((t) => t <= totalMs)
   if (!ticks.includes(totalMs) && totalMs > 3000) {
@@ -232,14 +267,34 @@ export function TraceWaterfall({
   return (
     <Card className={cn(overviewCardClass, "overflow-hidden")}>
       <CardHeader className="border-b border-border/60 pb-2">
-        <CardTitle className="text-base font-semibold">
-          Distributed Trace Waterfall
-        </CardTitle>
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className="text-base font-semibold">
+            Distributed Trace Waterfall
+          </CardTitle>
+          {onExpandedChange && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-sm"
+              onClick={() => onExpandedChange(!expanded)}
+              aria-label={
+                expanded ? "Collapse waterfall" : "Expand waterfall to full width"
+              }
+              className="shrink-0 text-muted-foreground hover:text-foreground"
+            >
+              {expanded ? (
+                <Minimize2 className="size-3.5" />
+              ) : (
+                <Maximize2 className="size-3.5" />
+              )}
+            </Button>
+          )}
+        </div>
       </CardHeader>
       <CardContent className="p-0">
         <div className="flex min-w-0">
           <div className="min-w-0 flex-1 overflow-x-auto">
-            <div className="grid w-max min-w-full grid-cols-[minmax(220px,280px)_minmax(720px,1fr)]">
+            <div className="grid w-max min-w-full grid-cols-[minmax(200px,260px)_minmax(480px,1fr)]">
               <div className="border-r border-border/60">
                 <div className="flex h-7 items-center border-b border-border/60 px-2.5 text-xs font-medium tracking-wide text-muted-foreground uppercase">
                   Service & Operation
@@ -254,7 +309,7 @@ export function TraceWaterfall({
                 ))}
               </div>
 
-              <div className="min-w-[720px]">
+              <div className="min-w-[480px]">
                 <div className="flex h-7 items-center border-b border-border/60 px-2.5 text-xs font-medium tracking-wide text-muted-foreground uppercase">
                   Timeline
                 </div>
@@ -296,7 +351,9 @@ export function TraceWaterfall({
             </div>
           </div>
 
-          <SpanDetailsPanel span={selectedSpan} />
+          {showDetailsPanel && (
+            <SpanDetailsPanel span={selectedSpan} embedded />
+          )}
         </div>
       </CardContent>
     </Card>

@@ -1,4 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar"
+import { DashboardMain } from "@/components/dashboard-main"
+import { DateRangeProvider } from "@/components/shared/date-range-context"
 
 export default function DashboardLayout({
   children,
@@ -6,9 +8,11 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex h-screen bg-background">
-      <AppSidebar />
-      <main className="flex-1 overflow-y-auto px-5 py-4">{children}</main>
-    </div>
+    <DateRangeProvider>
+      <div className="flex h-screen bg-background">
+        <AppSidebar />
+        <DashboardMain>{children}</DashboardMain>
+      </div>
+    </DateRangeProvider>
   )
 }

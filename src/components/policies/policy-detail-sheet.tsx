@@ -43,7 +43,14 @@ export function PolicyDetailSheet({
             <div className="grid grid-cols-2 gap-2">
               <SheetStat label="Type" value={policy.type} />
               <SheetStat label="Threshold" value={policy.threshold} />
+              <SheetStat label="Enforcement" value={policy.enforcement} />
+              <SheetStat label="Owner" value={policy.owner} />
             </div>
+            {policy.description && (
+              <p className="mt-2 border border-border/70 bg-background/60 px-3 py-2.5 text-xs text-muted-foreground">
+                {policy.description}
+              </p>
+            )}
           </SheetSection>
 
           <SheetSection title={`Bound agents (${policy.boundAgentIds.length})`}>

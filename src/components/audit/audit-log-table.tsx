@@ -7,6 +7,10 @@ import { ArrowUpRight, ChevronRight } from "lucide-react"
 
 import { AuditEventDetailSheet } from "@/components/audit/audit-event-detail-sheet"
 import { FilterableTable } from "@/components/shared/filterable-table"
+import {
+  TablePagination,
+  usePagination,
+} from "@/components/shared/table-pagination"
 import { Card, CardContent } from "@/components/ui/card"
 import { overviewCardClass } from "@/lib/card-styles"
 import { auditEvents } from "@/lib/mock-data/audit"
@@ -15,10 +19,90 @@ import { cn } from "@/lib/utils"
 
 type AuditRow = AuditEvent & Record<string, unknown>
 
+const PAGE_SIZE = 5
+
 const outcomeStyles: Record<AuditEvent["outcome"], string> = {
   success: "bg-nest-green-light text-[#15663a]",
   warning: "bg-[#f7efd2] text-[#8a6c16]",
   failure: "bg-nest-red-light text-nest-red",
+}
+
+function AuditLogRows({
+  filtered,
+  onSelect,
+}: {
+  filtered: AuditRow[]
+  onSelect: (id: string) => void
+}) {
+  const { paginated, page, setPage, total } = usePagination(
+    filtered,
+    PAGE_SIZE
+  )
+
+  if (filtered.length === 0) {
+    return (
+      <p className="px-4 py-10 text-center text-sm text-muted-foreground">
+        No events match your filters.
+      </p>
+    )
+  }
+
+  return (
+    <>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[760px] text-sm">
+          <thead>
+            <tr className="border-b border-border/60 bg-muted/50 text-left text-xs font-medium tracking-wide text-muted-foreground uppercase">
+              <th className="px-4 py-2.5 font-medium">Timestamp</th>
+              <th className="px-4 py-2.5 font-medium">Action</th>
+              <th className="px-4 py-2.5 font-medium">Agent</th>
+              <th className="px-4 py-2.5 font-medium">Outcome</th>
+              <th className="w-8 px-4 py-2.5" />
+            </tr>
+          </thead>
+          <tbody>
+            {paginated.map((event) => (
+              <tr
+                key={event.id}
+                onClick={() => onSelect(event.id)}
+                className="group cursor-pointer border-b border-border/40 transition-colors last:border-0 hover:bg-muted/40"
+              >
+                <td className="px-4 py-3 font-mono text-xs text-muted-foreground whitespace-nowrap">
+                  {event.timestamp}
+                </td>
+                <td className="px-4 py-3">
+                  <div className="font-medium">{event.action}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {event.actor} · {event.resource}
+                  </div>
+                </td>
+                <td className="px-4 py-3">{event.agentName}</td>
+                <td className="px-4 py-3">
+                  <span
+                    className={cn(
+                      "inline-flex h-5 items-center px-2 text-xs font-medium capitalize",
+                      outcomeStyles[event.outcome]
+                    )}
+                  >
+                    {event.outcome}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-right">
+                  <ChevronRight className="ml-auto size-4 text-muted-foreground/50 transition-colors group-hover:text-foreground" />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <TablePagination
+        page={page}
+        pageSize={PAGE_SIZE}
+        total={total}
+        onPageChange={setPage}
+      />
+    </>
+  )
 }
 
 export function AuditLogTable() {
@@ -69,52 +153,10 @@ export function AuditLogTable() {
         {(filtered) => (
           <Card className={overviewCardClass}>
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[760px] text-sm">
-                  <thead>
-                    <tr className="border-b border-border/60 bg-muted/50 text-left text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                      <th className="px-4 py-2.5 font-medium">Timestamp</th>
-                      <th className="px-4 py-2.5 font-medium">Action</th>
-                      <th className="px-4 py-2.5 font-medium">Agent</th>
-                      <th className="px-4 py-2.5 font-medium">Outcome</th>
-                      <th className="w-8 px-4 py-2.5" />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filtered.map((event) => (
-                      <tr
-                        key={event.id}
-                        onClick={() => setSelectedId(event.id)}
-                        className="group cursor-pointer border-b border-border/40 transition-colors last:border-0 hover:bg-muted/40"
-                      >
-                        <td className="px-4 py-3 font-mono text-xs text-muted-foreground whitespace-nowrap">
-                          {event.timestamp}
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="font-medium">{event.action}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {event.actor} · {event.resource}
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">{event.agentName}</td>
-                        <td className="px-4 py-3">
-                          <span
-                            className={cn(
-                              "inline-flex h-5 items-center px-2 text-xs font-medium capitalize",
-                              outcomeStyles[event.outcome]
-                            )}
-                          >
-                            {event.outcome}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-right">
-                          <ChevronRight className="ml-auto size-4 text-muted-foreground/50 transition-colors group-hover:text-foreground" />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <AuditLogRows
+                filtered={filtered}
+                onSelect={setSelectedId}
+              />
             </CardContent>
           </Card>
         )}

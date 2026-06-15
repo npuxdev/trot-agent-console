@@ -94,6 +94,18 @@ export type McpServer = {
   description: string
 }
 
+export type PolicyCategory =
+  | "tool-access"
+  | "model-routing"
+  | "data-classification"
+  | "spending"
+  | "escalation"
+  | "approval"
+  | "latency"
+  | "retry"
+
+export type PolicyEnforcement = "block" | "warn" | "require-approval" | "audit-only"
+
 export type PolicyViolation = {
   id: string
   policyId: string
@@ -102,6 +114,15 @@ export type PolicyViolation = {
   message: string
   time: string
   traceId?: string
+  severity?: "critical" | "high" | "medium" | "low"
+  violationType?:
+    | "unauthorized-tool"
+    | "token-overrun"
+    | "sensitive-data"
+    | "recursive-loop"
+    | "low-confidence"
+    | "latency-breach"
+    | "retry-exceeded"
 }
 
 export type Policy = {
@@ -109,10 +130,95 @@ export type Policy = {
   name: string
   scope: string
   type: string
+  category: PolicyCategory
   threshold: string
   status: Status
   boundAgentIds: string[]
   violations: PolicyViolation[]
+  enforcement: PolicyEnforcement
+  owner: string
+  lastModified: string
+  description?: string
+  affectedMcpIds?: string[]
+  affectedModelIds?: string[]
+}
+
+export type PolicySimulationResult = {
+  policyId: string
+  policyName: string
+  agentsAffected: number
+  tracesBlocked: number
+  estimatedCostImpact: string
+  approvalQueueIncrease: string
+  riskReduction: string
+}
+
+export type TopologyNodeType =
+  | "agent"
+  | "mcp"
+  | "model"
+  | "api"
+  | "database"
+  | "external"
+
+export type TopologyNode = {
+  id: string
+  label: string
+  type: TopologyNodeType
+  x: number
+  y: number
+  status: Status | AgentStatus
+  trustZone: "production" | "restricted" | "external"
+  metrics?: {
+    volume?: string
+    latency?: string
+    cost?: string
+    errorRate?: string
+  }
+  subtitle?: string
+}
+
+export type TopologyEdgeKind =
+  | "tool-call"
+  | "a2a"
+  | "model-inference"
+  | "data-access"
+  | "api-call"
+  | "governed-by"
+
+export type TopologyEdge = {
+  id: string
+  source: string
+  target: string
+  kind: TopologyEdgeKind
+  volume?: string
+  latency?: string
+  cost?: string
+  status: Status
+  incidentPath?: boolean
+  label?: string
+}
+
+export type TopologyTrustBoundary = {
+  id: string
+  label: string
+  x: number
+  y: number
+  width: number
+  height: number
+  level: "production" | "restricted" | "external"
+}
+
+export type OperationsSummary = {
+  activeAgents: number
+  totalAgents: number
+  governanceScore: number
+  budgetUtilization: number
+  budgetLimit: number
+  pendingApprovals: number
+  openViolations: number
+  a2aHandoffsToday: string
+  avgConfidenceScore: number
 }
 
 export type CostByAgent = {

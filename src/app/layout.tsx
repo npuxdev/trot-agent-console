@@ -14,8 +14,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Nest — Agent Observability",
-  description: "Observability platform for AI agents",
+  title: "TROT — Agent Operations Platform",
+  description:
+    "Govern, orchestrate, and operate autonomous AI agent ecosystems at enterprise scale",
 }
 
 export default function RootLayout({
