@@ -10,7 +10,7 @@ import { navSections, type NavBadgeTone } from "@/lib/navigation"
 
 const badgeToneClass: Record<NavBadgeTone, string> = {
   neutral: "bg-muted text-muted-foreground group-hover:bg-background/70",
-  warning: "bg-[#fef3c7] text-[#92600c]",
+  warning: "bg-nest-amber-light text-nest-amber",
   danger: "bg-nest-red-light text-nest-red",
 }
 
@@ -31,10 +31,10 @@ export function AppSidebar() {
             key={section.label}
             className={cn(
               "space-y-0.5 py-2",
-              sectionIndex > 0 && "border-t border-sidebar-border/70"
+              sectionIndex > 0 && "border-t border-sidebar-border"
             )}
           >
-            <p className="px-3 pt-1 pb-1.5 text-[10px] font-semibold tracking-[0.14em] text-muted-foreground/80 uppercase">
+            <p className="px-3 pt-1 pb-1.5 text-[10px] font-semibold tracking-[0.14em] text-muted-foreground uppercase">
               {section.label}
             </p>
             {section.items.map((item) => {
@@ -50,21 +50,18 @@ export function AppSidebar() {
                   href={item.href}
                   aria-current={isActive ? "page" : undefined}
                   className={cn(
-                    "group relative flex items-center gap-3 px-3 py-2 transition-colors",
+                    "group relative flex items-center gap-3 border-l-[3px] px-3 py-2 transition-colors",
                     isActive
-                      ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-[inset_0_0_0_1px_var(--color-sidebar-border)]"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent/40"
+                      ? "border-l-foreground bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-[inset_0_0_0_1px_var(--color-sidebar-border)]"
+                      : "border-l-transparent text-sidebar-foreground hover:bg-sidebar-accent/70"
                   )}
                 >
-                  {isActive && (
-                    <span className="absolute top-1 bottom-1 left-0 w-[3px] bg-nest-green" />
-                  )}
                   <span
                     className={cn(
                       "flex size-8 shrink-0 items-center justify-center border transition-colors",
                       isActive
-                        ? "border-nest-green/40 bg-nest-green/15 text-nest-green"
-                        : "border-transparent bg-muted/60 text-muted-foreground group-hover:text-foreground"
+                        ? "border-border-strong bg-card text-foreground"
+                        : "border-transparent bg-muted text-muted-foreground group-hover:border-border group-hover:bg-card group-hover:text-foreground"
                     )}
                   >
                     <Icon className="size-[18px]" />
@@ -73,10 +70,8 @@ export function AppSidebar() {
                     <span className="flex items-center justify-between gap-2">
                       <span
                         className={cn(
-                          "truncate text-sm",
-                          isActive
-                            ? "font-semibold text-sidebar-accent-foreground"
-                            : "font-medium"
+                          "truncate text-sm font-medium",
+                          isActive && "font-semibold"
                         )}
                       >
                         {item.title}
@@ -92,7 +87,7 @@ export function AppSidebar() {
                         </span>
                       )}
                     </span>
-                    <span className="block truncate text-xs text-muted-foreground">
+                    <span className="block truncate text-xs text-muted-foreground/70">
                       {item.description}
                     </span>
                   </span>

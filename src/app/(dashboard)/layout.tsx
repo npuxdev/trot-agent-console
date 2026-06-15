@@ -9,7 +9,7 @@ export default function DashboardLayout({
 }) {
   return (
     <DateRangeProvider>
-      <div className="flex h-screen bg-background">
+      <div className="flex h-screen min-h-0 overflow-hidden bg-background">
         <AppSidebar />
         <DashboardMain>{children}</DashboardMain>
       </div>

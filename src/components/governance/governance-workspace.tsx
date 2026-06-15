@@ -42,7 +42,7 @@ export function GovernanceSummaryCards() {
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <SummaryStatCard
-        icon={<Shield className="size-4 text-nest-green" />}
+        icon={<Shield className="size-4 text-muted-foreground" />}
         label="Compliance rate"
         value={`${governanceSummary.complianceRate}%`}
         subtext={`${governanceSummary.totalPolicies} active policies`}
@@ -89,10 +89,10 @@ export function PolicyCategoryGrid() {
               <button
                 key={cat.id}
                 type="button"
-                className="group flex items-start gap-3 border border-border/60 bg-background/60 p-3 text-left transition-colors hover:border-nest-green/30 hover:bg-nest-green-light/30"
+                className="group flex items-start gap-3 border border-border bg-background p-3 text-left transition-colors hover:border-border-strong hover:bg-muted/60"
               >
-                <span className="flex size-8 shrink-0 items-center justify-center border border-border/70 bg-muted/50 group-hover:border-nest-green/30 group-hover:bg-nest-green/10">
-                  <Icon className="size-4 text-muted-foreground group-hover:text-nest-green" />
+                <span className="flex size-8 shrink-0 items-center justify-center border border-border bg-muted group-hover:border-border-strong group-hover:bg-card">
+                  <Icon className="size-4 text-muted-foreground group-hover:text-foreground" />
                 </span>
                 <div className="min-w-0">
                   <p className="text-sm font-medium">{cat.label}</p>
@@ -179,7 +179,7 @@ export function PendingApprovalsPanel() {
             {item.traceId && (
               <Link
                 href={`/observability?trace=${item.traceId}`}
-                className="inline-flex items-center gap-0.5 text-[10px] font-medium leading-none text-nest-green hover:underline"
+                className="inline-flex items-center gap-0.5 text-[10px] font-medium leading-none text-nest-blue hover:underline"
               >
                 {item.traceId}
                 <ArrowUpRight className="size-3" />
@@ -205,7 +205,7 @@ export function PolicySimulationPanel() {
           </CardTitle>
           <button
             type="button"
-            className="inline-flex items-center gap-1.5 border border-nest-green/30 bg-nest-green-light px-2.5 py-1 text-[10px] font-medium text-[#166534] transition-colors hover:bg-nest-green-light/80"
+            className="inline-flex items-center gap-1.5 border border-border bg-muted px-2.5 py-1 text-[10px] font-medium text-foreground transition-colors hover:bg-muted/80"
           >
             <Play className="size-3" />
             Run simulation
@@ -225,8 +225,8 @@ export function PolicySimulationPanel() {
               className={cn(
                 "border px-2.5 py-1 text-[10px] font-medium transition-colors",
                 selectedSim === i
-                  ? "border-nest-green/30 bg-nest-green-light text-[#166534]"
-                  : "border-border/60 text-muted-foreground hover:bg-muted/50"
+                  ? "border-border-strong bg-card text-foreground"
+                  : "border-border text-muted-foreground hover:bg-muted/60"
               )}
             >
               {s.policyName.split("(")[0].trim()}
@@ -276,6 +276,13 @@ export function PolicySimulationPanel() {
               </p>
             </div>
           </div>
+          <Link
+            href={`/policies/history?policy=${sim.policyId}`}
+            className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-nest-blue hover:underline"
+          >
+            View simulation history
+            <ArrowUpRight className="size-3" />
+          </Link>
         </div>
       </CardContent>
     </Card>
@@ -314,12 +321,12 @@ export function GovernanceViolationsTable() {
           <table className="w-full min-w-[800px] text-sm">
             <thead>
               <tr className={tableHeadClass}>
-                <th className="px-4 py-2 font-medium">Type</th>
-                <th className="px-4 py-2 font-medium">Policy</th>
-                <th className="px-4 py-2 font-medium">Agent</th>
-                <th className="px-4 py-2 font-medium">Message</th>
-                <th className="px-4 py-2 font-medium">Severity</th>
-                <th className="px-4 py-2 font-medium">Links</th>
+                <th className="px-4 py-2.5 font-medium">Type</th>
+                <th className="px-4 py-2.5 font-medium">Policy</th>
+                <th className="px-4 py-2.5 font-medium">Agent</th>
+                <th className="px-4 py-2.5 font-medium">Message</th>
+                <th className="px-4 py-2.5 font-medium">Severity</th>
+                <th className="px-4 py-2.5 font-medium">Links</th>
               </tr>
             </thead>
             <tbody>
@@ -328,19 +335,19 @@ export function GovernanceViolationsTable() {
                   key={v.id}
                   className="border-b border-border/40 last:border-0"
                 >
-                  <td className="px-4 py-2">
+                  <td className="px-4 py-2.5">
                     <span className="text-xs font-medium">
                       {v.violationType
                         ? violationTypeLabels[v.violationType]
                         : "Policy breach"}
                     </span>
                   </td>
-                  <td className="px-4 py-2 font-medium">{v.policyName}</td>
-                  <td className="px-4 py-2">{v.agentName}</td>
-                  <td className="max-w-[240px] truncate px-4 py-2 text-muted-foreground">
+                  <td className="px-4 py-2.5 font-medium">{v.policyName}</td>
+                  <td className="px-4 py-2.5">{v.agentName}</td>
+                  <td className="max-w-[240px] truncate px-4 py-2.5 text-muted-foreground">
                     {v.message}
                   </td>
-                  <td className="px-4 py-2">
+                  <td className="px-4 py-2.5">
                     <StatusBadge
                       status={
                         v.severity === "critical"
@@ -353,18 +360,18 @@ export function GovernanceViolationsTable() {
                       }
                     />
                   </td>
-                  <td className="px-4 py-2">
+                  <td className="px-4 py-2.5">
                     <div className="flex gap-3 text-xs">
                       <Link
                         href={`/audit?policy=${v.policyId}`}
-                        className="font-medium text-nest-green hover:underline"
+                        className="font-medium text-nest-blue hover:underline"
                       >
                         Audit
                       </Link>
                       {v.traceId && (
                         <Link
                           href={`/observability?trace=${v.traceId}`}
-                          className="font-medium text-nest-green hover:underline"
+                          className="font-medium text-nest-blue hover:underline"
                         >
                           Trace
                         </Link>
@@ -391,7 +398,7 @@ export function ActivePoliciesPanel() {
           </CardTitle>
           <Link
             href="/policies"
-            className="text-xs font-medium text-nest-green hover:underline"
+            className="text-xs font-medium text-nest-blue hover:underline"
           >
             View all →
           </Link>

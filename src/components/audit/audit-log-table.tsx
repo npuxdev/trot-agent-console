@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { useMemo, useState } from "react"
+import { Fragment, useMemo, useState } from "react"
 import { ArrowUpRight, ChevronRight } from "lucide-react"
 
 import { AuditEventDetailSheet } from "@/components/audit/audit-event-detail-sheet"
@@ -12,7 +12,13 @@ import {
   usePagination,
 } from "@/components/shared/table-pagination"
 import { Card, CardContent } from "@/components/ui/card"
-import { overviewCardClass } from "@/lib/card-styles"
+import {
+  overviewCardClass,
+  tableGroupCellClass,
+  tableHeadClass,
+  tableRowClickableClass,
+} from "@/lib/card-styles"
+import { contextBarClass } from "@/lib/layout-styles"
 import { auditEvents } from "@/lib/mock-data/audit"
 import type { AuditEvent } from "@/lib/types"
 import { cn } from "@/lib/utils"
@@ -22,9 +28,23 @@ type AuditRow = AuditEvent & Record<string, unknown>
 const PAGE_SIZE_OPTIONS = [5, 10, 25] as const
 
 const outcomeStyles: Record<AuditEvent["outcome"], string> = {
-  success: "bg-nest-green-light text-[#15663a]",
-  warning: "bg-[#f7efd2] text-[#8a6c16]",
-  failure: "bg-nest-red-light text-nest-red",
+  success:
+    "border border-border border-l-2 border-l-nest-green bg-card text-nest-green",
+  warning:
+    "border border-border border-l-2 border-l-nest-amber bg-card text-nest-amber",
+  failure:
+    "border border-nest-red/30 border-l-2 border-l-nest-red bg-nest-red-light text-nest-red",
+}
+
+function groupByDate(rows: AuditRow[]) {
+  const groups = new Map<string, AuditRow[]>()
+  for (const event of rows) {
+    const date = event.timestamp.slice(0, 10)
+    const list = groups.get(date) ?? []
+    list.push(event)
+    groups.set(date, list)
+  }
+  return [...groups.entries()]
 }
 
 function AuditLogRows({
@@ -50,45 +70,55 @@ function AuditLogRows({
       <div className="overflow-x-auto">
         <table className="w-full min-w-[760px] text-sm">
           <thead>
-            <tr className="border-b border-border/60 bg-muted/50 text-left text-xs font-medium tracking-wide text-muted-foreground uppercase">
-              <th className="px-4 py-2.5 font-medium">Timestamp</th>
-              <th className="px-4 py-2.5 font-medium">Action</th>
-              <th className="px-4 py-2.5 font-medium">Agent</th>
-              <th className="px-4 py-2.5 font-medium">Outcome</th>
+            <tr className={tableHeadClass}>
+              <th className="px-4 py-2.5">Timestamp</th>
+              <th className="px-4 py-2.5">Action</th>
+              <th className="px-4 py-2.5">Agent</th>
+              <th className="px-4 py-2.5">Outcome</th>
               <th className="w-8 px-4 py-2.5" />
             </tr>
           </thead>
           <tbody>
-            {paginated.map((event) => (
-              <tr
-                key={event.id}
-                onClick={() => onSelect(event.id)}
-                className="group cursor-pointer border-b border-border/40 transition-colors last:border-0 hover:bg-muted/40"
-              >
-                <td className="px-4 py-3 font-mono text-xs text-muted-foreground whitespace-nowrap">
-                  {event.timestamp}
-                </td>
-                <td className="px-4 py-3">
-                  <div className="font-medium">{event.action}</div>
-                  <div className="text-xs text-muted-foreground">
-                    {event.actor} · {event.resource}
-                  </div>
-                </td>
-                <td className="px-4 py-3">{event.agentName}</td>
-                <td className="px-4 py-3">
-                  <span
-                    className={cn(
-                      "inline-flex h-5 items-center px-2 text-xs font-medium capitalize",
-                      outcomeStyles[event.outcome]
-                    )}
+            {groupByDate(paginated).map(([date, events]) => (
+              <Fragment key={date}>
+                <tr>
+                  <td colSpan={5} className={tableGroupCellClass}>
+                    {date} · {events.length} event
+                    {events.length === 1 ? "" : "s"}
+                  </td>
+                </tr>
+                {events.map((event) => (
+                  <tr
+                    key={event.id}
+                    onClick={() => onSelect(event.id)}
+                    className={tableRowClickableClass}
                   >
-                    {event.outcome}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <ChevronRight className="ml-auto size-4 text-muted-foreground/50 transition-colors group-hover:text-foreground" />
-                </td>
-              </tr>
+                    <td className="px-4 py-2.5 font-mono text-xs text-muted-foreground whitespace-nowrap">
+                      {event.timestamp.slice(11)}
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <div className="font-medium">{event.action}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {event.actor} · {event.resource}
+                      </div>
+                    </td>
+                    <td className="px-4 py-2.5">{event.agentName}</td>
+                    <td className="px-4 py-2.5">
+                      <span
+                        className={cn(
+                          "inline-flex h-5 items-center px-2 text-xs font-medium capitalize",
+                          outcomeStyles[event.outcome]
+                        )}
+                      >
+                        {event.outcome}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2.5 text-right">
+                      <ChevronRight className="ml-auto size-4 text-muted-foreground/50 transition-colors group-hover:text-foreground" />
+                    </td>
+                  </tr>
+                ))}
+              </Fragment>
             ))}
           </tbody>
         </table>
@@ -120,14 +150,14 @@ export function AuditLogTable() {
   return (
     <div className="space-y-3">
       {policyFilter && (
-        <div className="flex items-center gap-2 border border-nest-green/20 bg-nest-green-light/50 px-3 py-2 text-sm">
+        <div className={`${contextBarClass} border border-nest-blue/25 bg-card`}>
           <span className="text-muted-foreground">
             Filtered by policy:{" "}
             <span className="font-medium text-foreground">{policyFilter}</span>
           </span>
           <Link
             href="/audit"
-            className="ml-auto inline-flex items-center gap-1 font-medium text-nest-green hover:underline"
+            className="ml-auto inline-flex items-center gap-1 font-medium text-nest-blue hover:underline"
           >
             Clear
             <ArrowUpRight className="size-3" />

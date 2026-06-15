@@ -1,13 +1,14 @@
 import { Timer, Users, XCircle } from "lucide-react"
 
 import { Card, CardContent } from "@/components/ui/card"
+import { Sparkline } from "@/components/shared/sparkline"
 import { overviewCardClass } from "@/lib/overview-data"
 
 function AgentPieChart() {
   const segments = [
     { value: 230, color: "#22c55e", label: "Healthy" },
     { value: 15, color: "#eab308", label: "Slow" },
-    { value: 3, color: "#ef4444", label: "Degraded" },
+    { value: 3, color: "#dc2626", label: "Degraded" },
   ]
   const total = segments.reduce((sum, s) => sum + s.value, 0)
   let offset = 0
@@ -85,19 +86,11 @@ export function ActiveAgentsCard() {
 }
 
 function LatencySparkline() {
-  const points = "2,18 12,14 22,16 32,10 42,12 52,8 62,11 72,6 82,9 92,5"
-
   return (
-    <svg width="96" height="28" viewBox="0 0 96 28" className="text-[#3b82f6]">
-      <polyline
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        points={points}
-      />
-    </svg>
+    <Sparkline
+      data={[1.18, 1.22, 1.2, 1.26, 1.24, 1.3, 1.28, 1.32, 1.31, 1.32]}
+      color="#2563eb"
+    />
   )
 }
 

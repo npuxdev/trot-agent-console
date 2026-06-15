@@ -26,6 +26,7 @@
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
@@ -42,10 +43,19 @@
   --color-nest-cream: var(--nest-cream);
   --color-nest-green: var(--nest-green);
   --color-nest-green-light: var(--nest-green-light);
+  --color-nest-blue: var(--nest-blue);
+  --color-nest-blue-light: var(--nest-blue-light);
   --color-nest-orange: var(--nest-orange);
   --color-nest-orange-light: var(--nest-orange-light);
   --color-nest-red: var(--nest-red);
   --color-nest-red-light: var(--nest-red-light);
+  --color-nest-amber: var(--nest-amber);
+  --color-nest-amber-light: var(--nest-amber-light);
+  --color-nest-alert-bg: var(--nest-alert-bg);
+  --color-nest-alert-border: var(--nest-alert-border);
+  --color-stone-header: var(--stone-header);
+  --color-rail: var(--rail);
+  --color-sand-header: var(--stone-header);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -57,61 +67,83 @@
 
 :root {
   /*
-   * Warm paper neutral ramp (base anchored at #F5F4EF).
-   * Lower steps = elevated/brighter surfaces, higher steps = recessed/ink.
+   * Stone neutral ramp — limestone / ceramic, not oatmeal.
+   * Cool gray undertone with subtle warmth.
    */
-  --sand-0: #ffffff;
-  --sand-50: #fbfaf6;
-  --sand-100: #f8f7f1;
-  --sand-150: #f5f4ef;
-  --sand-200: #efede5;
-  --sand-300: #e6e3d9;
-  --sand-400: #dbd7ca;
-  --sand-500: #c3bdac;
-  --sand-600: #9a9483;
-  --sand-700: #6f6a5b;
-  --sand-800: #44413a;
-  --sand-900: #2a2822;
+  --stone-0: #ffffff;
+  --stone-50: #fcfcfb;
+  --stone-100: #f8f8f6;
+  --stone-150: #f5f5f3;
+  --stone-200: #eeeee9;
+  --stone-250: #f3f3ef;
+  --stone-300: #deded8;
+  --stone-400: #cfcfc7;
+  --stone-500: #a8a8a0;
+  --stone-600: #6b7280;
+  --stone-700: #4b5563;
+  --stone-800: #374151;
+  --stone-900: #111827;
 
-  --background: var(--sand-150);
-  --foreground: var(--sand-900);
-  --card: var(--sand-0);
-  --card-foreground: var(--sand-900);
-  --popover: var(--sand-0);
-  --popover-foreground: var(--sand-900);
-  --primary: #15803d;
+  --background: #f5f6f7;
+  --foreground: var(--stone-900);
+  --card: #ffffff;
+  --rail: #f2f3f4;
+  --card-foreground: var(--stone-900);
+  --popover: var(--stone-0);
+  --popover-foreground: var(--stone-900);
+
+  --primary: #166534;
   --primary-foreground: #ffffff;
-  --secondary: var(--sand-200);
-  --secondary-foreground: var(--sand-900);
-  --muted: var(--sand-200);
-  --muted-foreground: #6e6959;
-  --accent: #e9f3ec;
-  --accent-foreground: #14633a;
+  --secondary: var(--stone-100);
+  --secondary-foreground: var(--stone-900);
+  --muted: #f2f3f4;
+  --muted-foreground: var(--stone-600);
+  --accent: var(--stone-200);
+  --accent-foreground: var(--stone-900);
   --destructive: #dc2626;
-  --border: var(--sand-300);
-  --input: var(--sand-300);
-  --ring: #22c55e;
-  --chart-1: #22c55e;
-  --chart-2: #f97316;
-  --chart-3: #ef4444;
+
+  --border: var(--stone-300);
+  --border-strong: var(--stone-400);
+  --input: var(--stone-300);
+  --ring: #166534;
+
+  --chart-1: #166534;
+  --chart-2: #ea580c;
+  --chart-3: #dc2626;
   --chart-4: #3b82f6;
-  --chart-5: #a855f7;
+  --chart-5: #7c3aed;
+
   --radius: 0;
-  --sidebar: var(--sand-100);
-  --sidebar-foreground: #4a463b;
-  --sidebar-primary: #15803d;
+
+  --sidebar: #f2f3f4;
+  --sidebar-foreground: var(--stone-700);
+  --sidebar-primary: #166534;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e9f3ec;
-  --sidebar-accent-foreground: #14633a;
-  --sidebar-border: var(--sand-300);
-  --sidebar-ring: #22c55e;
-  --nest-cream: var(--sand-150);
-  --nest-green: #16a34a;
-  --nest-green-light: #e9f3ec;
+  --sidebar-accent: var(--stone-200);
+  --sidebar-accent-foreground: var(--stone-900);
+  --sidebar-border: var(--stone-300);
+  --sidebar-ring: #166534;
+
+  --stone-header: var(--stone-200);
+  --nest-cream: var(--stone-150);
+
+  /* Evergreen — primary actions & healthy states only */
+  --nest-green: #166534;
+  --nest-green-light: #dcefe5;
+
+  /* Cool accent — links, info, traces, selection */
+  --nest-blue: #2563eb;
+  --nest-blue-light: #dbeafe;
+
+  /* Semantic status — distinct hues, no overlap */
+  --nest-amber: #d97706;
+  --nest-amber-light: #fef3c7;
   --nest-orange: #ea580c;
-  --nest-orange-light: #fbeee2;
+  --nest-orange-light: #ffedd5;
+  --nest-alert-bg: #fff7ed;
+  --nest-alert-border: #f0d4bc;
   --nest-red: #dc2626;
-  --nest-red-light: #fbeceb;
+  --nest-red-light: #fee2e2;
 }
 
 @layer base {
@@ -123,20 +155,27 @@
     background-image:
       radial-gradient(
         circle at 1px 1px,
-        color-mix(in oklch, var(--foreground) 3%, transparent) 1px,
+        color-mix(in oklch, var(--foreground) 2%, transparent) 1px,
         transparent 0
-      ),
-      linear-gradient(
-        to bottom,
-        color-mix(in oklch, #ffffff 35%, transparent),
-        transparent 200px
       );
-    background-size:
-      5px 5px,
-      100% 100%;
+    background-size: 6px 6px;
     background-attachment: fixed;
   }
   html {
     @apply font-sans;
   }
+}
+
+@keyframes replay-edge-pulse {
+  0%,
+  100% {
+    stroke-opacity: 1;
+  }
+  50% {
+    stroke-opacity: 0.55;
+  }
+}
+
+.replay-edge-active {
+  animation: replay-edge-pulse 1.4s ease-in-out infinite;
 }

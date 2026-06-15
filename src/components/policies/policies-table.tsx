@@ -2,13 +2,13 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, History } from "lucide-react"
 
 import { PolicyDetailSheet } from "@/components/policies/policy-detail-sheet"
 import { StatusBadge } from "@/components/overview/status-badge"
 import { FilterableTable } from "@/components/shared/filterable-table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { overviewCardClass, tableHeadClass } from "@/lib/card-styles"
+import { overviewCardClass, tableHeadClass, tableRowClickableClass } from "@/lib/card-styles"
 import { policies } from "@/lib/mock-data/policies"
 import type { Policy } from "@/lib/types"
 import { cn } from "@/lib/utils"
@@ -25,7 +25,7 @@ const severityRank: Record<Severity, number> = {
 const severityStyles: Record<Severity, string> = {
   critical: "border-nest-red/30 bg-nest-red-light text-nest-red",
   high: "border-nest-orange/30 bg-nest-orange-light text-nest-orange",
-  medium: "border-[#e0cf8e] bg-[#f7efd2] text-[#8a6c16]",
+  medium: "border-nest-amber/30 bg-nest-amber-light text-nest-amber",
   low: "border-border bg-muted/60 text-muted-foreground",
 }
 
@@ -88,14 +88,15 @@ export function PoliciesTable() {
                 <table className="w-full min-w-[920px] text-sm">
                   <thead>
                     <tr className="border-b border-border/60 bg-muted/50 text-left text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                      <th className="px-4 py-2 font-medium">Policy</th>
-                      <th className="px-4 py-2 font-medium">Type</th>
-                      <th className="px-4 py-2 font-medium">Severity</th>
-                      <th className="px-4 py-2 font-medium">Status</th>
-                      <th className="px-4 py-2 font-medium">Owner</th>
-                      <th className="px-4 py-2 font-medium">Last modified</th>
-                      <th className="px-4 py-2 font-medium">Agents</th>
-                      <th className="w-8 px-4 py-2" />
+                      <th className="px-4 py-2.5 font-medium">Policy</th>
+                      <th className="px-4 py-2.5 font-medium">Type</th>
+                      <th className="px-4 py-2.5 font-medium">Severity</th>
+                      <th className="px-4 py-2.5 font-medium">Status</th>
+                      <th className="px-4 py-2.5 font-medium">Owner</th>
+                      <th className="px-4 py-2.5 font-medium">Last modified</th>
+                      <th className="px-4 py-2.5 font-medium">Agents</th>
+                      <th className="px-4 py-2.5 font-medium"></th>
+                      <th className="w-8 px-4 py-2.5" />
                     </tr>
                   </thead>
                   <tbody>
@@ -103,31 +104,41 @@ export function PoliciesTable() {
                       <tr
                         key={policy.id}
                         onClick={() => setSelectedId(policy.id)}
-                        className="group cursor-pointer border-b border-border/40 transition-colors last:border-0 hover:bg-muted/40"
+                        className={tableRowClickableClass}
                       >
-                        <td className="px-4 py-2">
+                        <td className="px-4 py-2.5">
                           <div className="font-medium">{policy.name}</div>
                           <div className="text-xs text-muted-foreground">
                             {policy.scope}
                           </div>
                         </td>
-                        <td className="px-4 py-2">{policy.type}</td>
-                        <td className="px-4 py-2">
+                        <td className="px-4 py-2.5">{policy.type}</td>
+                        <td className="px-4 py-2.5">
                           <SeverityPill severity={getPolicySeverity(policy)} />
                         </td>
-                        <td className="px-4 py-2">
+                        <td className="px-4 py-2.5">
                           <StatusBadge status={policy.status} />
                         </td>
-                        <td className="px-4 py-2 text-muted-foreground">
+                        <td className="px-4 py-2.5 text-muted-foreground">
                           {policy.owner}
                         </td>
-                        <td className="px-4 py-2 text-muted-foreground">
+                        <td className="px-4 py-2.5 text-muted-foreground">
                           {policy.lastModified}
                         </td>
-                        <td className="px-4 py-2 tabular-nums text-muted-foreground">
+                        <td className="px-4 py-2.5 tabular-nums text-muted-foreground">
                           {policy.boundAgentIds.length}
                         </td>
-                        <td className="px-4 py-2 text-right">
+                        <td className="px-4 py-2.5">
+                          <Link
+                            href={`/policies/history?policy=${policy.id}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground transition-colors hover:text-nest-blue"
+                          >
+                            <History className="size-3" />
+                            History
+                          </Link>
+                        </td>
+                        <td className="px-4 py-2.5 text-right">
                           <ChevronRight className="ml-auto size-4 text-muted-foreground/50 transition-colors group-hover:text-foreground" />
                         </td>
                       </tr>
@@ -181,24 +192,24 @@ export function PolicyViolationsTable() {
                   key={v.id}
                   className="border-b border-border/40 last:border-0"
                 >
-                  <td className="px-4 py-3 font-medium">{v.policyName}</td>
-                  <td className="px-4 py-3">{v.agentName}</td>
-                  <td className="px-4 py-3 text-muted-foreground">
+                  <td className="px-4 py-2.5 font-medium">{v.policyName}</td>
+                  <td className="px-4 py-2.5">{v.agentName}</td>
+                  <td className="px-4 py-2.5 text-muted-foreground">
                     {v.message}
                   </td>
-                  <td className="px-4 py-3 text-muted-foreground">{v.time}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-2.5 text-muted-foreground">{v.time}</td>
+                  <td className="px-4 py-2.5">
                     <div className="flex gap-3 text-xs">
                       <Link
                         href={`/audit?policy=${v.policyId}`}
-                        className="font-medium text-nest-green hover:underline"
+                        className="font-medium text-nest-blue hover:underline"
                       >
                         Audit
                       </Link>
                       {v.traceId && (
                         <Link
                           href={`/observability?trace=${v.traceId}`}
-                          className="font-medium text-nest-green hover:underline"
+                          className="font-medium text-nest-blue hover:underline"
                         >
                           Trace
                         </Link>

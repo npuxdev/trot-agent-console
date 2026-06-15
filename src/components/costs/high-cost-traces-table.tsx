@@ -5,7 +5,7 @@ import { ChevronRight } from "lucide-react"
 
 import { HighCostTraceDetailSheet } from "@/components/costs/cost-detail-sheet"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { overviewCardClass, tableHeadClass } from "@/lib/card-styles"
+import { overviewCardClass, tableHeadClass, tableRowClickableClass } from "@/lib/card-styles"
 import { highCostTraces } from "@/lib/mock-data/costs"
 import type { HighCostTrace } from "@/lib/types"
 
@@ -36,21 +36,21 @@ export function HighCostTracesTable() {
                   <tr
                     key={trace.traceId}
                     onClick={() => setSelected(trace)}
-                    className="group cursor-pointer border-b border-border/40 transition-colors last:border-0 hover:bg-muted/50"
+                    className={tableRowClickableClass}
                   >
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-2.5">
                       <div className="font-medium">{trace.operation}</div>
                       <div className="font-mono text-xs text-muted-foreground">
                         {trace.traceId}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="px-4 py-2.5 text-muted-foreground">
                       {trace.agent}
                     </td>
-                    <td className="px-4 py-3 font-semibold text-nest-orange tabular-nums">
+                    <td className="px-4 py-2.5 font-semibold text-nest-orange tabular-nums">
                       {trace.cost}
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-2.5 text-right">
                       <ChevronRight className="ml-auto size-4 text-muted-foreground/50 transition-colors group-hover:text-foreground" />
                     </td>
                   </tr>

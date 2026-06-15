@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { AlertTriangle, ArrowUpRight, Bot } from "lucide-react"
+import Link from "next/link"
+import { AlertTriangle, ArrowUpRight, Bot, PlayCircle } from "lucide-react"
 
 import { StatusBadge } from "@/components/overview/status-badge"
 import { Button } from "@/components/ui/button"
@@ -156,6 +157,16 @@ export function TraceSummary({
             <MetadataField label="Environment" value={trace.environment} />
             <MetadataField label="Version" value={trace.version} />
           </div>
+
+          {trace.status === "degraded" && (
+            <Link
+              href={`/topology/replay?incident=${trace.id}`}
+              className="flex items-center gap-1.5 border-t border-border/60 pt-3 text-xs font-medium text-nest-red transition-colors hover:text-nest-red/80"
+            >
+              <PlayCircle className="size-3.5" />
+              Replay incident
+            </Link>
+          )}
         </CardContent>
       </Card>
     )

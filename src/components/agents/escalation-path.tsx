@@ -18,9 +18,9 @@ function OnCallContactLink({ contact }: { contact: OnCallContact }) {
     <Menu.Root>
       <Menu.Trigger
         className={cn(
-          "inline-flex items-center gap-0.5 font-medium text-nest-green",
+          "inline-flex items-center gap-0.5 font-medium text-nest-blue",
           "underline-offset-2 hover:underline",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nest-green/40"
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nest-blue/40"
         )}
       >
         {contact.name}

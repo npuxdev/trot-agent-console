@@ -14,7 +14,8 @@ import {
 } from "lucide-react"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { overviewCardClass } from "@/lib/card-styles"
+import { overviewCardClass, railCardClass } from "@/lib/card-styles"
+import { incidentStripClass } from "@/lib/layout-styles"
 import {
   topologyEdges,
   topologyIncident,
@@ -32,7 +33,7 @@ const nodeTypeConfig: Record<
   TopologyNodeType,
   { icon: typeof Bot; color: string; bg: string }
 > = {
-  agent: { icon: Bot, color: "text-[#166534]", bg: "fill-[#f0fdf4]" },
+  agent: { icon: Bot, color: "text-nest-green", bg: "fill-[#f8faf9]" },
   mcp: { icon: Server, color: "text-[#1e40af]", bg: "fill-[#eff6ff]" },
   model: { icon: Cpu, color: "text-[#7c3aed]", bg: "fill-[#f5f3ff]" },
   api: { icon: Zap, color: "text-[#b45309]", bg: "fill-[#fffbeb]" },
@@ -44,13 +45,13 @@ const statusStroke: Record<string, string> = {
   success: "#22c55e",
   healthy: "#22c55e",
   warning: "#eab308",
-  degraded: "#ef4444",
+  degraded: "#dc2626",
 }
 
 const zoneStyles = {
-  production: "fill-[#f0fdf4]/25 stroke-[#86efac]/35",
-  restricted: "fill-[#eff6ff]/25 stroke-[#93c5fd]/35",
-  external: "fill-[#fff1f2]/25 stroke-[#fda4af]/35",
+  production: "fill-muted/30 stroke-border-strong/50",
+  restricted: "fill-nest-blue-light/20 stroke-nest-blue/25",
+  external: "fill-nest-red-light/15 stroke-nest-red/20",
 }
 
 /** Anchor on the node border closest to the peer */
@@ -239,7 +240,7 @@ export function TopologyGraph({
               refY="2.5"
               orient="auto"
             >
-              <polygon points="0 0, 7 2.5, 0 5" fill="#ef4444" />
+              <polygon points="0 0, 7 2.5, 0 5" fill="#dc2626" />
             </marker>
           </defs>
 
@@ -303,7 +304,7 @@ export function TopologyGraph({
                     fill="none"
                     stroke={
                       isIncident
-                        ? "#ef4444"
+                        ? "#dc2626"
                         : (statusStroke[edge.status] ?? "#cbd5e1")
                     }
                     strokeWidth={isIncident ? 2 : isConnected ? 1.75 : 1.25}
@@ -333,55 +334,107 @@ export function TopologyGraph({
             return (
               <g
                 key={node.id}
-                opacity={dimmed ? 0.2 : 1}
                 className="cursor-pointer"
                 onClick={() => handleNodeClick(node.id)}
                 onMouseEnter={() => setHoveredNodeId(node.id)}
                 onMouseLeave={() => setHoveredNodeId(null)}
               >
-                {isIncident && (
+                <g opacity={dimmed ? 0.2 : 1}>
+                  {isSelected && (
+                    <rect
+                      x={node.x - 6}
+                      y={node.y - 6}
+                      width={NODE_W + 12}
+                      height={NODE_H + 12}
+                      fill="rgba(37,99,235,0.06)"
+                      stroke="#2563eb"
+                      strokeWidth={1.5}
+                      opacity={0.85}
+                    />
+                  )}
+
+                  {isHovered && !isSelected && (
+                    <rect
+                      x={node.x - 4}
+                      y={node.y - 4}
+                      width={NODE_W + 8}
+                      height={NODE_H + 8}
+                      fill="none"
+                      stroke="#94a3b8"
+                      strokeWidth={1.25}
+                      opacity={0.9}
+                    />
+                  )}
+
+                  {isIncident && (
+                    <rect
+                      x={node.x - 4}
+                      y={node.y - 4}
+                      width={NODE_W + 8}
+                      height={NODE_H + 8}
+                      fill="none"
+                      stroke="#dc2626"
+                      strokeWidth={1.5}
+                      strokeDasharray="4,3"
+                      opacity={0.8}
+                    />
+                  )}
+
                   <rect
-                    x={node.x - 4}
-                    y={node.y - 4}
-                    width={NODE_W + 8}
-                    height={NODE_H + 8}
-                    fill="none"
-                    stroke="#ef4444"
-                    strokeWidth={1.5}
-                    strokeDasharray="4,3"
-                    opacity={0.8}
+                    x={node.x}
+                    y={node.y}
+                    width={NODE_W}
+                    height={NODE_H}
+                    className={cn(config.bg, "stroke-background")}
+                    stroke={statusStroke[node.status] ?? "#cbd5e1"}
+                    strokeWidth={isSelected ? 2 : isHovered ? 1.75 : 1.25}
                   />
+
+                  <rect
+                    x={node.x}
+                    y={node.y}
+                    width={3}
+                    height={NODE_H}
+                    fill={statusStroke[node.status] ?? "#cbd5e1"}
+                  />
+                </g>
+
+                {(isSelected || isHovered) && node.metrics?.latency && (
+                  <g>
+                    <rect
+                      x={node.x + NODE_W / 2 - 34}
+                      y={node.y - 18}
+                      width={68}
+                      height={14}
+                      fill="#ffffff"
+                      stroke="#e2e8f0"
+                      strokeWidth={0.75}
+                    />
+                    <text
+                      x={node.x + NODE_W / 2}
+                      y={node.y - 8}
+                      textAnchor="middle"
+                      className="text-[8px] font-semibold"
+                      fill="#111827"
+                    >
+                      {node.metrics.latency}
+                    </text>
+                  </g>
                 )}
-
-                <rect
-                  x={node.x}
-                  y={node.y}
-                  width={NODE_W}
-                  height={NODE_H}
-                  className={cn(config.bg, "stroke-background")}
-                  stroke={statusStroke[node.status] ?? "#cbd5e1"}
-                  strokeWidth={isSelected ? 2 : isHovered ? 1.75 : 1.25}
-                />
-
-                <rect
-                  x={node.x}
-                  y={node.y}
-                  width={3}
-                  height={NODE_H}
-                  fill={statusStroke[node.status] ?? "#cbd5e1"}
-                />
 
                 <text
                   x={node.x + 11}
                   y={node.y + 19}
-                  className="fill-foreground text-[11px] font-semibold"
+                  className="text-[11px] font-semibold"
+                  fill={dimmed ? "rgba(17,24,39,0.35)" : "#111827"}
                 >
                   {node.label}
                 </text>
                 <text
                   x={node.x + 11}
                   y={node.y + 33}
-                  className="fill-muted-foreground text-[9px]"
+                  className="text-[9px]"
+                  fill={dimmed ? "rgba(17,24,39,0.35)" : "#64748b"}
                 >
                   {node.subtitle}
                 </text>
@@ -401,7 +454,7 @@ export function TopologyLegend() {
     { label: "Model", color: "#c4b5fd" },
     { label: "Database", color: "#5eead4" },
     { label: "External", color: "#fda4af" },
-    { label: "Incident path", color: "#ef4444", dashed: true },
+    { label: "Incident path", color: "#dc2626", dashed: true },
   ]
 
   return (
@@ -411,7 +464,7 @@ export function TopologyLegend() {
           <span
             className={cn(
               "inline-block h-0.5 w-3.5",
-              item.dashed && "border-t border-dashed border-[#ef4444] bg-transparent"
+              item.dashed && "border-t border-dashed border-[#dc2626] bg-transparent"
             )}
             style={item.dashed ? undefined : { backgroundColor: item.color }}
           />
@@ -427,25 +480,35 @@ export function TopologyLegend() {
 
 export function TopologyIncidentBanner() {
   return (
-    <div className="flex items-start gap-3 border border-nest-red/30 bg-nest-red-light px-4 py-3">
-      <AlertTriangle className="mt-0.5 size-4 shrink-0 text-nest-red" />
-      <div className="min-w-0 flex-1 space-y-1">
-        <p className="text-sm font-medium text-foreground">
+    <div
+      className={`${incidentStripClass} border border-nest-red/30 bg-nest-red-light`}
+    >
+      <AlertTriangle className="size-4 shrink-0 text-nest-red" />
+      <div className="flex min-w-0 flex-1 items-center gap-3 overflow-hidden">
+        <p className="truncate text-sm font-semibold text-foreground">
           Active incident: {topologyIncident.title}
         </p>
-        <p className="text-xs text-muted-foreground">
+        <p className="hidden truncate text-xs text-muted-foreground lg:inline">
           Blast radius: {topologyIncident.blastRadius.agents} agents,{" "}
           {topologyIncident.blastRadius.downstreamTraces} downstream traces ·
           Est. cost impact {topologyIncident.blastRadius.estimatedCost}
         </p>
       </div>
-      <Link
-        href={`/observability?trace=${topologyIncident.traceId}`}
-        className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-nest-red hover:underline"
-      >
-        {topologyIncident.traceId}
-        <ArrowUpRight className="size-3" />
-      </Link>
+      <div className="flex shrink-0 items-center gap-3">
+        <Link
+          href={`/topology/replay?incident=${topologyIncident.traceId}`}
+          className="inline-flex shrink-0 items-center gap-1.5 bg-nest-red px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-nest-red/90"
+        >
+          Replay incident
+        </Link>
+        <Link
+          href={`/observability?trace=${topologyIncident.traceId}`}
+          className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-nest-red hover:underline"
+        >
+          {topologyIncident.traceId}
+          <ArrowUpRight className="size-3" />
+        </Link>
+      </div>
     </div>
   )
 }
@@ -457,7 +520,7 @@ export function TopologyInspector({ nodeId }: { nodeId: string | null }) {
 
   if (!node) {
     return (
-      <Card className={overviewCardClass}>
+      <Card className={railCardClass}>
         <CardContent className="space-y-3 p-4">
           <p className="text-sm font-medium">Node Inspector</p>
           <p className="text-xs leading-relaxed text-muted-foreground">
@@ -475,7 +538,7 @@ export function TopologyInspector({ nodeId }: { nodeId: string | null }) {
   const Icon = config.icon
 
   return (
-    <Card className={overviewCardClass}>
+    <Card className={railCardClass}>
       <CardContent className="space-y-4 p-4">
         <div className="flex items-start gap-3">
           <span
@@ -576,7 +639,7 @@ export function TopologyBlastRadius() {
   const { blastRadius, bottleneck, propagationPath } = topologyIncident
 
   return (
-    <Card className={overviewCardClass}>
+    <Card className={railCardClass}>
       <CardContent className="space-y-3 p-4">
         <p className="text-sm font-medium">Blast Radius Analysis</p>
         <div className="grid grid-cols-2 gap-2">

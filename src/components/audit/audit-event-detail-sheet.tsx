@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Activity, ArrowUpRight, ShieldCheck } from "lucide-react"
+import { Activity, ArrowUpRight, PlayCircle, ShieldCheck } from "lucide-react"
 
 import { Sheet, SheetSection } from "@/components/ui/sheet"
 import { auditEvents } from "@/lib/mock-data/audit"
@@ -10,9 +10,12 @@ import type { AuditEvent } from "@/lib/types"
 import { cn } from "@/lib/utils"
 
 const outcomeStyles: Record<AuditEvent["outcome"], string> = {
-  success: "bg-nest-green-light text-[#15663a]",
-  warning: "bg-[#f7efd2] text-[#8a6c16]",
-  failure: "bg-nest-red-light text-nest-red",
+  success:
+    "border border-border border-l-2 border-l-nest-green bg-card text-nest-green",
+  warning:
+    "border border-border border-l-2 border-l-nest-amber bg-card text-nest-amber",
+  failure:
+    "border border-nest-red/30 border-l-2 border-l-nest-red bg-nest-red-light text-nest-red",
 }
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
@@ -79,6 +82,15 @@ export function AuditEventDetailSheet({
                 View policy
               </Link>
             )}
+            {event.relatedTraceId && (
+              <Link
+                href={`/topology/replay?incident=${event.relatedTraceId}`}
+                className="inline-flex items-center gap-1.5 border border-nest-red/30 bg-nest-red-light px-3 py-1.5 text-xs font-medium text-nest-red transition-colors hover:bg-nest-red-light/80"
+              >
+                <PlayCircle className="size-3.5" />
+                View replay
+              </Link>
+            )}
           </div>
         )
       }
@@ -104,7 +116,7 @@ export function AuditEventDetailSheet({
                     className="flex items-center justify-between gap-2 border border-border/70 bg-background/60 px-3 py-2 transition-colors hover:border-border hover:bg-muted/50"
                   >
                     <span className="text-muted-foreground">Trace</span>
-                    <span className="inline-flex items-center gap-1 text-nest-green">
+                    <span className="inline-flex items-center gap-1 text-nest-blue">
                       {event.relatedTraceId}
                       <ArrowUpRight className="size-3" />
                     </span>
@@ -116,7 +128,7 @@ export function AuditEventDetailSheet({
                     className="flex items-center justify-between gap-2 border border-border/70 bg-background/60 px-3 py-2 font-sans transition-colors hover:border-border hover:bg-muted/50"
                   >
                     <span className="text-muted-foreground">Policy</span>
-                    <span className="inline-flex items-center gap-1 text-nest-green">
+                    <span className="inline-flex items-center gap-1 text-nest-blue">
                       {policy.name}
                       <ArrowUpRight className="size-3" />
                     </span>

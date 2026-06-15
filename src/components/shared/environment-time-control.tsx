@@ -88,13 +88,13 @@ function CompactSelect({
               className={cn(
                 "flex w-full items-center justify-between px-3 py-1.5 text-left text-sm transition-colors hover:bg-muted",
                 option === value
-                  ? "font-medium text-[#166534]"
+                  ? "font-medium text-foreground"
                   : "text-foreground"
               )}
             >
               {option}
               {option === value && (
-                <span className="size-1.5 rounded-full bg-nest-green" />
+                <span className="size-1.5 rounded-full bg-nest-blue" />
               )}
             </button>
           ))}

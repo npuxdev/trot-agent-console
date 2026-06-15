@@ -20,6 +20,11 @@ export const agents: Agent[] = [
     lastDeployed: "Jun 12, 2026",
     costPerExecution: "$0.018",
     escalationPath: "Customer Ops on-call → Dana Okafor",
+    avgLatencyDelta: { value: "12%", direction: "up" },
+    errorRateDelta: { value: "8%", direction: "up" },
+    volumeDelta: { value: "3%", direction: "up" },
+    costPerExecutionDelta: { value: "4%", direction: "down", tone: "positive" },
+    latencySparkline: [1.2, 1.35, 1.5, 1.62, 1.74, 1.84],
   },
   {
     id: "fraud-review",
@@ -40,6 +45,11 @@ export const agents: Agent[] = [
     lastDeployed: "Jun 9, 2026",
     costPerExecution: "$0.014",
     escalationPath: "Risk on-call → Marcus Chen",
+    avgLatencyDelta: { value: "5%", direction: "up" },
+    errorRateDelta: { value: "2%", direction: "down", tone: "positive" },
+    volumeDelta: { value: "8%", direction: "up" },
+    costPerExecutionDelta: { value: "1%", direction: "up" },
+    latencySparkline: [0.95, 1.02, 1.08, 1.1, 1.12, 1.12],
   },
   {
     id: "policy-lookup",
@@ -60,6 +70,9 @@ export const agents: Agent[] = [
     lastDeployed: "Jun 4, 2026",
     costPerExecution: "$0.004",
     escalationPath: "Underwriting queue → Priya Nair",
+    avgLatencyDelta: { value: "3%", direction: "down", tone: "positive" },
+    volumeDelta: { value: "4%", direction: "up" },
+    costPerExecutionDelta: { value: "2%", direction: "down", tone: "positive" },
   },
   {
     id: "refund",
@@ -80,6 +93,8 @@ export const agents: Agent[] = [
     lastDeployed: "May 30, 2026",
     costPerExecution: "$0.006",
     escalationPath: "Finance approver → dual sign-off",
+    volumeDelta: { value: "2%", direction: "up" },
+    costPerExecutionDelta: { value: "1%", direction: "down", tone: "positive" },
   },
   {
     id: "triage",
@@ -100,6 +115,8 @@ export const agents: Agent[] = [
     lastDeployed: "Jun 2, 2026",
     costPerExecution: "$0.003",
     escalationPath: "Support tier-2 → Triage lead",
+    volumeDelta: { value: "6%", direction: "up" },
+    avgLatencyDelta: { value: "1%", direction: "down", tone: "positive" },
   },
 ]
 

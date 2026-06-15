@@ -18,6 +18,8 @@ export const mcpServers: McpServer[] = [
     schemaVersion: "2024-11-05",
     lastSync: "3m ago",
     costPerCall: "$0.0008",
+    latencyP95Delta: { value: "18%", direction: "up" },
+    costPerCallDelta: { value: "5%", direction: "up" },
   },
   {
     id: "policy-cache",
@@ -35,6 +37,8 @@ export const mcpServers: McpServer[] = [
     schemaVersion: "2024-11-05",
     lastSync: "1m ago",
     costPerCall: "$0.0002",
+    latencyP95Delta: { value: "4%", direction: "up" },
+    costPerCallDelta: { value: "2%", direction: "down", tone: "positive" },
   },
   {
     id: "refund-gateway",
@@ -52,6 +56,7 @@ export const mcpServers: McpServer[] = [
     schemaVersion: "2024-11-05",
     lastSync: "5m ago",
     costPerCall: "$0.0011",
+    latencyP95Delta: { value: "1%", direction: "down", tone: "positive" },
   },
   {
     id: "customer-profile",
@@ -69,6 +74,7 @@ export const mcpServers: McpServer[] = [
     schemaVersion: "2024-11-05",
     lastSync: "2m ago",
     costPerCall: "$0.0005",
+    costPerCallDelta: { value: "3%", direction: "down", tone: "positive" },
   },
 ]
 

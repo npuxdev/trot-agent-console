@@ -11,6 +11,9 @@ import {
   topologyTrustBoundaries,
   topologyIncident,
 } from "./topology"
+import { incidentReplay, replayTimeline } from "./incident-replay"
+import { claimsAgentLifecycle } from "./agent-lifecycle"
+import { a2aLatencySloHistory } from "./policy-history"
 
 export {
   agents,
@@ -28,4 +31,8 @@ export {
   topologyEdges,
   topologyTrustBoundaries,
   topologyIncident,
+  incidentReplay,
+  replayTimeline,
+  claimsAgentLifecycle,
+  a2aLatencySloHistory,
 }

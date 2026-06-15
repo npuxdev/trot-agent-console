@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { ArrowUpRight, Bot } from "lucide-react"
+import { ArrowUpRight, Bot, History } from "lucide-react"
 
 import { Sheet, SheetSection, SheetStat } from "@/components/ui/sheet"
 import { StatusBadge } from "@/components/overview/status-badge"
@@ -27,13 +27,22 @@ export function PolicyDetailSheet({
       headerExtra={policy && <StatusBadge status={policy.status} />}
       footer={
         policy && (
-          <Link
-            href={`/audit?policy=${policy.id}`}
-            className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted"
-          >
-            View related audit events
-            <ArrowUpRight className="size-3.5" />
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href={`/policies/history?policy=${policy.id}`}
+              className="inline-flex items-center gap-1.5 bg-nest-green px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-nest-green/90"
+            >
+              <History className="size-3.5" />
+              Simulation history
+            </Link>
+            <Link
+              href={`/audit?policy=${policy.id}`}
+              className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted"
+            >
+              View audit events
+              <ArrowUpRight className="size-3.5" />
+            </Link>
+          </div>
         )
       }
     >
@@ -97,7 +106,7 @@ export function PolicyDetailSheet({
                     {v.traceId && (
                       <Link
                         href={`/observability?trace=${v.traceId}`}
-                        className="inline-flex items-center gap-1 text-xs font-medium text-nest-green hover:underline"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-nest-blue hover:underline"
                       >
                         {v.traceId}
                         <ArrowUpRight className="size-3" />

@@ -53,7 +53,7 @@ export function SpendByAgentChart() {
                   <Link
                     href={`/costs?agent=${agent.agentId}`}
                     className={cn(
-                      "font-medium hover:text-nest-green hover:underline",
+                      "font-medium hover:text-nest-blue hover:underline",
                       isHighlighted && "text-nest-green"
                     )}
                   >
@@ -78,7 +78,7 @@ export function SpendByAgentChart() {
           {selectedAgent && (
             <Link
               href="/costs"
-              className="text-xs font-medium text-nest-green hover:underline"
+              className="text-xs font-medium text-nest-blue hover:underline"
             >
               Clear filter
             </Link>
@@ -105,24 +105,24 @@ export function SpendByAgentChart() {
                       key={agent.agentId}
                       className="border-b border-border/40 last:border-0"
                     >
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-2.5">
                         <Link
                           href={`/costs?agent=${agent.agentId}`}
                           className={cn(
-                            "font-medium hover:text-nest-green hover:underline",
+                            "font-medium hover:text-nest-blue hover:underline",
                             isHighlighted && "text-nest-green"
                           )}
                         >
                           {agent.agentName}
                         </Link>
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground">
+                      <td className="px-4 py-2.5 text-muted-foreground">
                         {agent.team}
                       </td>
-                      <td className="px-4 py-3 tabular-nums">
+                      <td className="px-4 py-2.5 tabular-nums">
                         ${agent.spend.toLocaleString()}
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground tabular-nums">
+                      <td className="px-4 py-2.5 text-muted-foreground tabular-nums">
                         {agent.tokens}
                       </td>
                     </tr>
@@ -132,10 +132,10 @@ export function SpendByAgentChart() {
             </table>
           </div>
           {selectedAgent && (
-            <div className="px-4 py-3">
+            <div className="px-4 py-2.5">
               <Link
                 href="/costs"
-                className="text-xs font-medium text-nest-green hover:underline"
+                className="text-xs font-medium text-nest-blue hover:underline"
               >
                 Clear filter
               </Link>

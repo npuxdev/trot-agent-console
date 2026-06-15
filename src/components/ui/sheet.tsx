@@ -34,13 +34,13 @@ export function Sheet({
       <Dialog.Portal>
         <Dialog.Backdrop
           className={cn(
-            "fixed inset-0 z-40 bg-foreground/25 backdrop-blur-[1px]",
+            "fixed inset-0 z-40 bg-[rgba(15,23,42,0.28)] backdrop-blur-[1px]",
             "transition-opacity duration-200 data-[starting-style]:opacity-0 data-[ending-style]:opacity-0"
           )}
         />
         <Dialog.Popup
           className={cn(
-            "fixed inset-y-0 right-0 z-50 flex w-full max-w-[440px] flex-col border-l border-border bg-card shadow-[-8px_0_30px_rgba(74,67,52,0.15)] outline-none",
+            "fixed inset-y-0 right-0 z-50 flex w-full max-w-[440px] flex-col border-l border-border bg-card shadow-[-8px_0_24px_rgba(15,23,42,0.08)] outline-none",
             "transition-transform duration-300 ease-out data-[starting-style]:translate-x-full data-[ending-style]:translate-x-full",
             className
           )}
@@ -75,7 +75,7 @@ export function Sheet({
           </div>
 
           {footer && (
-            <div className="border-t border-border bg-muted/30 px-5 py-3">
+            <div className="sticky bottom-0 z-10 border-t border-border bg-muted/30 px-5 py-3">
               {footer}
             </div>
           )}

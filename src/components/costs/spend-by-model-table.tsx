@@ -5,6 +5,7 @@ import { ChevronRight } from "lucide-react"
 
 import { ChartTableToggle } from "@/components/costs/chart-table-toggle"
 import { ModelDetailSheet } from "@/components/costs/cost-detail-sheet"
+import { TableMetricCell } from "@/components/shared/table-metric-cell"
 import {
   Card,
   CardAction,
@@ -12,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { overviewCardClass, tableHeadClass } from "@/lib/card-styles"
+import { overviewCardClass, tableHeadClass, tableRowClickableClass } from "@/lib/card-styles"
 import { costByModel } from "@/lib/mock-data/costs"
 import type { CostByModel } from "@/lib/types"
 import { cn } from "@/lib/utils"
@@ -90,21 +91,24 @@ export function SpendByModelTable() {
                     <tr
                       key={row.model}
                       onClick={() => setSelected(row)}
-                      className="group cursor-pointer border-b border-border/40 transition-colors last:border-0 hover:bg-muted/50"
+                      className={tableRowClickableClass}
                     >
-                      <td className="px-4 py-3 font-mono text-xs font-medium">
+                      <td className="px-4 py-2.5 font-mono text-xs font-medium">
                         {row.model}
                       </td>
-                      <td className="px-4 py-3 tabular-nums">
-                        ${row.spend.toLocaleString()}
+                      <td className="px-4 py-2.5">
+                        <TableMetricCell
+                          value={`$${row.spend.toLocaleString()}`}
+                          delta={row.spendDelta}
+                        />
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground tabular-nums">
+                      <td className="px-4 py-2.5 text-muted-foreground tabular-nums">
                         {row.tokens}
                       </td>
-                      <td className="px-4 py-3 text-muted-foreground tabular-nums">
+                      <td className="px-4 py-2.5 text-muted-foreground tabular-nums">
                         {row.requests}
                       </td>
-                      <td className="px-4 py-3 text-right">
+                      <td className="px-4 py-2.5 text-right">
                         <ChevronRight className="ml-auto size-4 text-muted-foreground/50 transition-colors group-hover:text-foreground" />
                       </td>
                     </tr>

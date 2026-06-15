@@ -4,6 +4,12 @@ export type AgentStatus = "healthy" | "warning" | "degraded"
 
 export type AgentAutonomy = "Autonomous" | "Supervised" | "Manual"
 
+export type MetricDelta = {
+  value: string
+  direction: "up" | "down" | "flat"
+  tone?: "positive" | "negative" | "neutral"
+}
+
 export type Agent = {
   id: string
   name: string
@@ -23,6 +29,11 @@ export type Agent = {
   lastDeployed: string
   costPerExecution: string
   escalationPath: string
+  avgLatencyDelta?: MetricDelta
+  errorRateDelta?: MetricDelta
+  volumeDelta?: MetricDelta
+  costPerExecutionDelta?: MetricDelta
+  latencySparkline?: number[]
 }
 
 export type Trace = {
@@ -111,6 +122,8 @@ export type McpServer = {
   schemaVersion: string
   lastSync: string
   costPerCall: string
+  latencyP95Delta?: MetricDelta
+  costPerCallDelta?: MetricDelta
 }
 
 export type PolicyCategory =
@@ -253,6 +266,7 @@ export type CostByModel = {
   spend: number
   tokens: string
   requests: string
+  spendDelta?: MetricDelta
 }
 
 export type HighCostTrace = {
@@ -276,4 +290,177 @@ export type AuditEvent = {
   outcome: AuditOutcome
   relatedTraceId?: string
   relatedPolicyId?: string
+}
+
+// --- Incident Replay ---
+
+export type ReplayEventCategory =
+  | "latency"
+  | "retry"
+  | "slo-breach"
+  | "policy"
+  | "containment"
+  | "detection"
+
+export type ReplayEvent = {
+  id: string
+  timestamp: string
+  eventType: string
+  category: ReplayEventCategory
+  sourceComponent: string
+  affectedComponents: string[]
+  metricBefore?: string
+  metricAfter?: string
+  policyTriggered?: string
+  explanation: string
+  suggestedAction?: { label: string; href: string }
+  topologyHighlights: {
+    activeNodes: string[]
+    activeEdges: string[]
+  }
+  systemState: string
+}
+
+export type ReplayLiveMetrics = {
+  latency: string
+  latencyDirection: "up" | "down" | "flat"
+  retries: string
+  retriesDirection: "up" | "down" | "flat"
+  costImpact: string
+  costDirection: "up" | "down" | "flat"
+  tracesAffected: string
+  agentsImpacted: string
+  containmentState?: string
+}
+
+export type IncidentReplay = {
+  id: string
+  status: string
+  rootCause: string
+  started: string
+  detected: string
+  agentsImpacted: number
+  downstreamTraces: number
+  costImpact: string
+  affectedAgents: string[]
+}
+
+// --- Agent Lifecycle ---
+
+export type LifecycleStage =
+  | "design"
+  | "simulate"
+  | "deploy"
+  | "observe"
+  | "govern"
+  | "improve"
+  | "retire"
+
+export type LifecycleStageStatus = "complete" | "active" | "pending" | "locked"
+
+export type StageTask = {
+  label: string
+  status: "done" | "active" | "pending"
+  value?: string
+}
+
+export type StageDetail = {
+  status: LifecycleStageStatus
+  description: string
+  tasks: StageTask[]
+  metrics?: Record<string, string>
+}
+
+export type LifecycleEvent = {
+  id: string
+  timestamp: string
+  stage: LifecycleStage
+  eventType: string
+  actor: string
+  description: string
+}
+
+export type AgentLifecycle = {
+  agentId: string
+  agentName: string
+  team: string
+  model: string
+  version: string
+  environment: string
+  autonomy: string
+  currentStage: LifecycleStage
+  status: AgentStatus
+  stages: Record<LifecycleStage, StageDetail>
+  recentEvents: LifecycleEvent[]
+  readiness: {
+    simulationPassRate: number
+    policyCoverage: string
+    toolPermissionRisk: string
+    costEstimate: string
+    productionLatency: string
+    errorRate: string
+    rollbackTarget: string
+    lastDeployed: string
+  }
+  risks: { label: string; severity: "high" | "medium" | "low" }[]
+}
+
+// --- Policy Simulation History ---
+
+export type PolicyTimelineEvent = {
+  id: string
+  timestamp: string
+  action: string
+  actor: string
+  details?: string
+  icon?: string
+}
+
+export type SimulationMetrics = {
+  cascadingFailures: number
+  costImpact: number
+  approvalQueue: number
+  tracesBlocked: number
+  agentsAffected: number
+  confidence: number
+  confidenceDrift?: number
+}
+
+export type ApprovalChain = {
+  requestedBy: string
+  reviewedBy: string
+  approvalType: string
+  reason: string
+  auditId: string
+  relatedIncident: string
+}
+
+export type RollbackOption = {
+  targetVersion: string
+  effects: {
+    escalationVolume: string
+    cascadingFailureRisk: string
+    costIncrease: string
+  }
+  requiresApproval: boolean
+}
+
+export type PolicyHistory = {
+  policyId: string
+  name: string
+  type: string
+  owner: string
+  severity: "critical" | "high" | "medium" | "low"
+  status: Status
+  currentVersion: string
+  previousVersion: string
+  affectedAgentIds: string[]
+  relatedIncident: string
+  versionDiff: {
+    expected: SimulationMetrics
+    actual: SimulationMetrics
+  }
+  timeline: PolicyTimelineEvent[]
+  approvalChain: ApprovalChain
+  rollback: RollbackOption
 }

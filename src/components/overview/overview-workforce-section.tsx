@@ -21,11 +21,11 @@ const WORKFORCE_NARRATIVE_DISMISSED_KEY = "nest:workforce-narrative-dismissed"
 const DISMISS_TRANSITION_MS = 300
 
 const phaseColors: Record<string, string> = {
-  Onboard: "bg-[#eff6ff] text-[#1e40af] border-[#93c5fd]",
-  Govern: "bg-nest-orange-light text-[#92600c] border-nest-orange/30",
+  Onboard: "bg-nest-blue-light text-nest-blue border-nest-blue/30",
+  Govern: "bg-nest-amber-light text-nest-amber border-nest-amber/30",
   Investigate: "bg-nest-red-light text-nest-red border-nest-red/30",
   Audit: "bg-[#f5f3ff] text-[#7c3aed] border-[#c4b5fd]",
-  Optimize: "bg-nest-green-light text-[#166534] border-nest-green/30",
+  Optimize: "bg-muted text-foreground border-border-strong",
 }
 
 const phaseBadgeClass =
@@ -104,7 +104,7 @@ function WorkforceNarrative({ onDismiss }: { onDismiss: () => void }) {
                 </span>
                 <Link
                   href={scenario.link}
-                  className="inline-flex items-center gap-1 text-[10px] font-medium text-nest-green hover:underline"
+                  className="inline-flex items-center gap-1 text-[10px] font-medium text-nest-blue hover:underline"
                 >
                   View
                   <ArrowUpRight className="size-3" />
@@ -112,7 +112,7 @@ function WorkforceNarrative({ onDismiss }: { onDismiss: () => void }) {
               </div>
             </div>
             {scenario.status === "completed" && (
-              <CheckCircle2 className="size-4 shrink-0 text-nest-green" />
+              <CheckCircle2 className="size-4 shrink-0 text-muted-foreground" />
             )}
             {scenario.status === "pending" && (
               <Clock className="size-4 shrink-0 text-nest-orange" />

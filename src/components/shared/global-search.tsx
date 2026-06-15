@@ -210,7 +210,7 @@ export function GlobalSearch() {
                               className={cn(
                                 "mt-0.5 flex size-7 shrink-0 items-center justify-center border",
                                 isActive
-                                  ? "border-nest-green/30 bg-nest-green/10 text-nest-green"
+                                  ? "border-border-strong bg-card text-foreground"
                                   : "border-transparent bg-muted/60 text-muted-foreground"
                               )}
                             >

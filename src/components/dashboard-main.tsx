@@ -14,11 +14,13 @@ export function DashboardMain({ children }: DashboardMainProps) {
   const { isLoading } = useDateRange()
 
   return (
-    <main className="relative flex flex-1 flex-col overflow-y-auto">
-      <GlobalStatusIndicator />
+    <main className="relative flex min-h-0 flex-1 flex-col overflow-y-auto">
+      <header className="shrink-0">
+        <GlobalStatusIndicator />
+      </header>
       <div
         className={cn(
-          "flex-1 px-5 py-4 transition-opacity duration-200",
+          "flex min-h-0 flex-1 flex-col px-5 py-4 transition-opacity duration-200",
           isLoading && "pointer-events-none opacity-40"
         )}
       >
@@ -32,7 +34,7 @@ export function DashboardMain({ children }: DashboardMainProps) {
           aria-busy="true"
         >
           <div className="flex flex-col items-center gap-3 border border-border bg-card px-6 py-5 shadow-sm">
-            <Loader2 className="size-6 animate-spin text-nest-green" />
+            <Loader2 className="size-6 animate-spin text-muted-foreground" />
             <p className="text-sm text-muted-foreground">Updating data…</p>
           </div>
         </div>

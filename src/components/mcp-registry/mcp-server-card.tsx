@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { Fragment, useState } from "react"
 import { AlertTriangle } from "lucide-react"
 
 import { ChevronRight } from "lucide-react"
@@ -8,8 +8,9 @@ import { ChevronRight } from "lucide-react"
 import { AgentDetailSheet } from "@/components/agents/agent-detail-sheet"
 import { McpServerDetailSheet } from "@/components/mcp-registry/mcp-server-detail-sheet"
 import { StatusBadge } from "@/components/overview/status-badge"
+import { TableMetricCell } from "@/components/shared/table-metric-cell"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { overviewCardClass, tableHeadClass } from "@/lib/card-styles"
+import { overviewCardClass, cardHoverClass, tableGroupCellClass, tableHeadClass, tableRowClickableClass } from "@/lib/card-styles"
 import { getAgentById } from "@/lib/mock-data/agents"
 import { mcpServers } from "@/lib/mock-data/mcp-servers"
 import { cn } from "@/lib/utils"
@@ -26,7 +27,8 @@ export function McpServersGrid() {
             onClick={() => setSelectedId(server.id)}
             className={cn(
               overviewCardClass,
-              "cursor-pointer transition-shadow hover:shadow-[0_2px_4px_rgba(74,67,52,0.08),0_4px_16px_rgba(74,67,52,0.08)]",
+              cardHoverClass,
+              "cursor-pointer",
               server.status === "degraded" && "border-nest-orange/40"
             )}
           >
@@ -56,18 +58,22 @@ export function McpServersGrid() {
               <div className="grid grid-cols-3 gap-2 text-xs">
                 <div>
                   <p className="text-muted-foreground">p95</p>
-                  <p
+                  <TableMetricCell
+                    value={server.latencyP95}
+                    delta={server.latencyP95Delta}
                     className={cn(
-                      "font-medium tabular-nums",
+                      "text-xs font-medium",
                       server.status === "degraded" && "text-nest-orange"
                     )}
-                  >
-                    {server.latencyP95}
-                  </p>
+                  />
                 </div>
                 <div>
                   <p className="text-muted-foreground">Cost / call</p>
-                  <p className="font-medium tabular-nums">{server.costPerCall}</p>
+                  <TableMetricCell
+                    value={server.costPerCall}
+                    delta={server.costPerCallDelta}
+                    className="text-xs font-medium"
+                  />
                 </div>
                 <div>
                   <p className="text-muted-foreground">Agents</p>
@@ -106,20 +112,6 @@ export function McpServersGrid() {
 export function McpAgentsTable() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
 
-  const rows = mcpServers.flatMap((server) =>
-    server.connectedAgentIds.map((agentId) => {
-      const agent = getAgentById(agentId)
-      return {
-        serverId: server.id,
-        serverName: server.name,
-        serverStatus: server.status,
-        agentId,
-        agentName: agent?.name ?? agentId,
-        agentTeam: agent?.team ?? "—",
-      }
-    })
-  )
-
   return (
     <>
       <Card className={overviewCardClass}>
@@ -133,32 +125,47 @@ export function McpAgentsTable() {
             <table className="w-full min-w-[600px] text-sm">
               <thead>
                 <tr className={tableHeadClass}>
-                  <th className="px-4 py-2 font-medium">MCP Server</th>
-                  <th className="px-4 py-2 font-medium">Server Status</th>
-                  <th className="px-4 py-2 font-medium">Agent</th>
-                  <th className="px-4 py-2 font-medium">Team</th>
-                  <th className="w-8 px-4 py-2" />
+                  <th className="px-4 py-2.5">MCP Server</th>
+                  <th className="px-4 py-2.5">Server Status</th>
+                  <th className="px-4 py-2.5">Agent</th>
+                  <th className="px-4 py-2.5">Team</th>
+                  <th className="w-8 px-4 py-2.5" />
                 </tr>
               </thead>
               <tbody>
-                {rows.map((row) => (
-                  <tr
-                    key={`${row.serverId}-${row.agentId}`}
-                    onClick={() => setSelectedId(row.agentId)}
-                    className="group cursor-pointer border-b border-border/40 transition-colors last:border-0 hover:bg-muted/50"
-                  >
-                    <td className="px-4 py-2 font-medium">{row.serverName}</td>
-                    <td className="px-4 py-2">
-                      <StatusBadge status={row.serverStatus} />
-                    </td>
-                    <td className="px-4 py-2">{row.agentName}</td>
-                    <td className="px-4 py-2 text-muted-foreground">
-                      {row.agentTeam}
-                    </td>
-                    <td className="px-4 py-2 text-right">
-                      <ChevronRight className="ml-auto size-4 text-muted-foreground/50 transition-colors group-hover:text-foreground" />
-                    </td>
-                  </tr>
+                {mcpServers.map((server) => (
+                  <Fragment key={server.id}>
+                    <tr>
+                      <td colSpan={5} className={tableGroupCellClass}>
+                        {server.name} · {server.connectedAgentIds.length} dependent
+                        {server.connectedAgentIds.length === 1 ? "" : "s"}
+                      </td>
+                    </tr>
+                    {server.connectedAgentIds.map((agentId) => {
+                      const agent = getAgentById(agentId)
+                      return (
+                        <tr
+                          key={`${server.id}-${agentId}`}
+                          onClick={() => setSelectedId(agentId)}
+                          className={tableRowClickableClass}
+                        >
+                          <td className="px-4 py-2.5 font-medium text-muted-foreground">
+                            {server.name}
+                          </td>
+                          <td className="px-4 py-2.5">
+                            <StatusBadge status={server.status} />
+                          </td>
+                          <td className="px-4 py-2.5">{agent?.name ?? agentId}</td>
+                          <td className="px-4 py-2.5 text-muted-foreground">
+                            {agent?.team ?? "—"}
+                          </td>
+                          <td className="px-4 py-2.5 text-right">
+                            <ChevronRight className="ml-auto size-4 text-muted-foreground/50 transition-colors group-hover:text-foreground" />
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </Fragment>
                 ))}
               </tbody>
             </table>

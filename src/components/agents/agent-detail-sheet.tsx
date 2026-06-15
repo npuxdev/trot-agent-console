@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Activity, ArrowUpRight, ShieldCheck, Siren } from "lucide-react"
+import { Activity, ArrowUpRight, GitBranch, PlayCircle, ShieldCheck, Siren } from "lucide-react"
 
 import { AutonomyPill } from "@/components/agents/autonomy-pill"
 import { EscalationPath } from "@/components/agents/escalation-path"
@@ -36,7 +36,7 @@ export function AgentDetailSheet({
       }
       footer={
         agent && (
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Link
               href={`/observability?trace=${agent.lastTraceId}`}
               className="inline-flex items-center gap-1.5 bg-nest-green px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-nest-green/90"
@@ -45,11 +45,21 @@ export function AgentDetailSheet({
               View latest trace
             </Link>
             <Link
-              href={`/costs?agent=${agent.id}`}
+              href={`/agents/lifecycle?agent=${agent.id}`}
               className="inline-flex items-center gap-1.5 border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted"
             >
-              View costs
+              <GitBranch className="size-3.5" />
+              Manage lifecycle
             </Link>
+            {agent.status === "degraded" && (
+              <Link
+                href={`/topology/replay?incident=${agent.lastTraceId}`}
+                className="inline-flex items-center gap-1.5 border border-nest-red/30 bg-nest-red-light px-3 py-1.5 text-xs font-medium text-nest-red transition-colors hover:bg-nest-red-light/80"
+              >
+                <PlayCircle className="size-3.5" />
+                View replay
+              </Link>
+            )}
           </div>
         )
       }
@@ -159,7 +169,7 @@ export function AgentDetailSheet({
                 <span>Last trace</span>
                 <Link
                   href={`/observability?trace=${agent.lastTraceId}`}
-                  className="inline-flex items-center gap-1 text-nest-green hover:underline"
+                  className="inline-flex items-center gap-1 text-nest-blue hover:underline"
                 >
                   {agent.lastTraceId}
                   <ArrowUpRight className="size-3" />

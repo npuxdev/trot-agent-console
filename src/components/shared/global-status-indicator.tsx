@@ -1,6 +1,7 @@
 import Link from "next/link"
 
 import { getSystemStatus, type SystemLevel } from "@/lib/system-status"
+import { statusBannerClass } from "@/lib/layout-styles"
 import { cn } from "@/lib/utils"
 
 const levelStyles: Record<
@@ -8,17 +9,17 @@ const levelStyles: Record<
   { container: string; dot: string; label: string }
 > = {
   operational: {
-    container: "border-b border-nest-green/25 bg-nest-green-light/60",
+    container: "border-b border-border bg-card",
     dot: "bg-nest-green",
-    label: "text-[#15663a]",
+    label: "text-foreground",
   },
   degraded: {
-    container: "border-b border-nest-orange/30 bg-nest-orange-light/70",
+    container: "border-b border-nest-alert-border bg-nest-alert-bg",
     dot: "bg-nest-orange",
-    label: "text-nest-orange",
+    label: "text-stone-800",
   },
   critical: {
-    container: "border-b border-nest-red/30 bg-nest-red-light/70",
+    container: "border-b border-nest-red/40 bg-nest-red-light",
     dot: "bg-nest-red",
     label: "text-nest-red",
   },
@@ -29,7 +30,7 @@ export function GlobalStatusIndicator() {
   const styles = levelStyles[status.level]
 
   const href = status.primaryIncidentTraceId
-    ? `/observability?trace=${status.primaryIncidentTraceId}`
+    ? `/topology/replay?incident=${status.primaryIncidentTraceId}`
     : "/topology"
 
   const meta: string[] = []
@@ -47,7 +48,8 @@ export function GlobalStatusIndicator() {
       href={href}
       aria-label={`System status: ${status.environment} ${status.label}. ${meta.join(", ") || "All systems nominal"}.`}
       className={cn(
-        "group flex w-full items-center gap-2 px-5 py-2.5 text-xs transition-colors",
+        "group block transition-colors",
+        statusBannerClass,
         styles.container
       )}
     >

@@ -65,7 +65,7 @@ export function OperationsPostureCards() {
             <span className="text-[10px] font-semibold tracking-[0.12em] text-muted-foreground/80 uppercase">
               Avg confidence
             </span>
-            <span className="text-xs font-semibold tabular-nums text-nest-green">
+            <span className="text-xs font-semibold tabular-nums text-foreground">
               {confidencePct}%
             </span>
           </div>
@@ -91,8 +91,8 @@ export function OperationsPostureCards() {
                     card.tone === "warn"
                       ? "border-nest-orange/30 bg-nest-orange-light"
                       : card.tone === "good"
-                        ? "border-nest-green/30 bg-nest-green-light"
-                        : "border-border/70 bg-muted/50"
+                        ? "border-border-strong bg-muted"
+                        : "border-border bg-muted/50"
                   )}
                 >
                   <Icon
@@ -158,17 +158,17 @@ export function QuickActionsPanel() {
           <Link
             key={action.href}
             href={action.href}
-            className="group flex items-center justify-between border border-border/60 px-3 py-2.5 transition-colors hover:border-nest-green/30 hover:bg-nest-green-light/30"
+            className="group flex items-center justify-between border border-border px-3 py-2.5 transition-colors hover:border-border-strong hover:bg-muted/60"
           >
             <div>
-              <p className="text-sm font-medium group-hover:text-[#166534]">
+              <p className="text-sm font-medium group-hover:text-foreground">
                 {action.label}
               </p>
               <p className="text-xs text-muted-foreground">
                 {action.description}
               </p>
             </div>
-            <ArrowUpRight className="size-4 text-muted-foreground/50 transition-colors group-hover:text-nest-green" />
+            <ArrowUpRight className="size-4 text-muted-foreground/50 transition-colors group-hover:text-foreground" />
           </Link>
         ))}
       </CardContent>
@@ -186,7 +186,7 @@ export function ApprovalQueuePreview() {
           </CardTitle>
           <Link
             href="/approvals"
-            className="text-xs font-medium text-nest-green hover:underline"
+            className="text-xs font-medium text-nest-blue hover:underline"
           >
             View all →
           </Link>

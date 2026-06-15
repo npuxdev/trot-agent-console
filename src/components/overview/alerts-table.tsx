@@ -7,7 +7,7 @@ import { AgentDetailSheet } from "@/components/agents/agent-detail-sheet"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { StatusBadge } from "@/components/overview/status-badge"
 import { alerts, overviewCardClass } from "@/lib/overview-data"
-import { tableHeadClass } from "@/lib/card-styles"
+import { tableHeadClass, tableRowClickableClass } from "@/lib/card-styles"
 import { cn } from "@/lib/utils"
 
 export function AlertsTable() {
@@ -26,10 +26,10 @@ export function AlertsTable() {
             <table className="w-full min-w-[440px] text-sm">
               <thead>
                 <tr className={tableHeadClass}>
-                  <th className="px-4 py-2 font-medium">Alert</th>
-                  <th className="px-4 py-2 font-medium">Agent</th>
-                  <th className="px-4 py-2 font-medium">Status</th>
-                  <th className="w-6 px-4 py-2" />
+                  <th className="px-4 py-2.5 font-medium">Alert</th>
+                  <th className="px-4 py-2.5 font-medium">Agent</th>
+                  <th className="px-4 py-2.5 font-medium">Status</th>
+                  <th className="w-6 px-4 py-2.5" />
                 </tr>
               </thead>
               <tbody>
@@ -37,7 +37,7 @@ export function AlertsTable() {
                   <tr
                     key={alert.alert}
                     onClick={() => setSelectedId(alert.agentId)}
-                    className="group cursor-pointer border-b border-border/40 transition-colors last:border-0 hover:bg-muted/50"
+                    className={tableRowClickableClass}
                   >
                     <td className="px-4 py-2.5 font-medium">{alert.alert}</td>
                     <td className="px-4 py-2.5 text-muted-foreground">

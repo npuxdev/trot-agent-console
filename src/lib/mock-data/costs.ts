@@ -16,11 +16,11 @@ export const costByAgent: CostByAgent[] = [
 ]
 
 export const costByModel: CostByModel[] = [
-  { model: "gpt-4.1", spend: 6200, tokens: "24.2M", requests: "380K" },
-  { model: "gpt-4.1-mini", spend: 2600, tokens: "12.4M", requests: "980K" },
-  { model: "deepseek-v4", spend: 2100, tokens: "8.4M", requests: "520K" },
-  { model: "text-embedding-3", spend: 1400, tokens: "4.0M", requests: "890K" },
-  { model: "gemma-3-4b", spend: 380, tokens: "5.6M", requests: "2.4M" },
+  { model: "gpt-4.1", spend: 6200, tokens: "24.2M", requests: "380K", spendDelta: { value: "6%", direction: "up" } },
+  { model: "gpt-4.1-mini", spend: 2600, tokens: "12.4M", requests: "980K", spendDelta: { value: "3%", direction: "up" } },
+  { model: "deepseek-v4", spend: 2100, tokens: "8.4M", requests: "520K", spendDelta: { value: "2%", direction: "down", tone: "positive" } },
+  { model: "text-embedding-3", spend: 1400, tokens: "4.0M", requests: "890K", spendDelta: { value: "1%", direction: "up" } },
+  { model: "gemma-3-4b", spend: 380, tokens: "5.6M", requests: "2.4M", spendDelta: { value: "4%", direction: "down", tone: "positive" } },
 ]
 
 export const highCostTraces: HighCostTrace[] = [
