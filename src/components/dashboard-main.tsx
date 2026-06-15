@@ -20,7 +20,7 @@ export function DashboardMain({ children }: DashboardMainProps) {
       </header>
       <div
         className={cn(
-          "flex min-h-0 flex-1 flex-col px-5 py-4 transition-opacity duration-200",
+          "flex min-h-0 flex-1 flex-col px-5 pb-4 pt-0 transition-opacity duration-200",
           isLoading && "pointer-events-none opacity-40"
         )}
       >
